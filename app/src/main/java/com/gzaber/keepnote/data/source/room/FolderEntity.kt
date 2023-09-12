@@ -6,8 +6,8 @@ import java.util.Date
 
 @Entity(tableName = "folders")
 data class FolderEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     val name: String,
     val color: Int,
-    val date: Date = Date()
+    val date: Date
 )
