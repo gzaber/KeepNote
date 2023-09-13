@@ -6,8 +6,9 @@ import com.gzaber.keepnote.data.utils.toEntity
 import com.gzaber.keepnote.data.utils.toModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class DefaultNotesRepository(
+class DefaultNotesRepository @Inject constructor(
     private val notesDataSource: NotesDataSource
 ) : NotesRepository {
 

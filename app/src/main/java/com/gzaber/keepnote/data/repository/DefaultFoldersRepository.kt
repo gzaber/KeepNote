@@ -7,8 +7,9 @@ import com.gzaber.keepnote.data.utils.toEntity
 import com.gzaber.keepnote.data.utils.toModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class DefaultFoldersRepository(
+class DefaultFoldersRepository @Inject constructor(
     private val foldersDataSource: FoldersDataSource
 ) : FoldersRepository {
 
