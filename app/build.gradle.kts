@@ -80,4 +80,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+
+    // Compose Navigation
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
