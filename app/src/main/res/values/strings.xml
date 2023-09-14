@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">KeepNote</string>
+
+    <string name="content_desc_filter">Filter</string>
+    <string name="content_desc_grid_view">Grid view</string>
+    <string name="content_desc_list_view">List view</string>
+    <string name="content_desc_note">Note</string>
+    <string name="content_desc_folder">Folder</string>
 </resources>
