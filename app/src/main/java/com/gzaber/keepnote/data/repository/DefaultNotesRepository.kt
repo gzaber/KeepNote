@@ -34,15 +34,15 @@ class DefaultNotesRepository @Inject constructor(
         }
     }
 
-    override suspend fun insertNote(note: Note) {
-        notesDataSource.insertNote(note.toEntity())
+    override suspend fun createNote(note: Note) {
+        notesDataSource.createNote(note.toEntity())
     }
 
     override suspend fun updateNote(note: Note) {
         notesDataSource.updateNote(note.toEntity())
     }
 
-    override suspend fun deleteNote(note: Note) {
-        notesDataSource.deleteNote(note.toEntity())
+    override suspend fun deleteNote(noteId: Int) {
+        notesDataSource.deleteNote(noteId)
     }
 }

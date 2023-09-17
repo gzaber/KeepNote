@@ -27,15 +27,15 @@ class DefaultFoldersRepository @Inject constructor(
         }
     }
 
-    override suspend fun insertFolder(folder: Folder) {
-        foldersDataSource.insertFolder(folder.toEntity())
+    override suspend fun createFolder(folder: Folder) {
+        foldersDataSource.createFolder(folder.toEntity())
     }
 
     override suspend fun updateFolder(folder: Folder) {
         foldersDataSource.updateFolder(folder.toEntity())
     }
 
-    override suspend fun deleteFolder(folder: Folder) {
-        foldersDataSource.deleteFolder(folder.toEntity())
+    override suspend fun deleteFolder(folderId: Int) {
+        foldersDataSource.deleteFolder(folderId)
     }
 }

@@ -18,11 +18,11 @@ interface FolderDao {
     fun observeById(folderId: Int): Flow<FolderEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(folder: FolderEntity)
+    suspend fun create(folder: FolderEntity)
 
     @Update
-    fun update(folder: FolderEntity)
+    suspend fun update(folder: FolderEntity)
 
-    @Delete
-    fun delete(folder: FolderEntity)
+    @Query("DELETE FROM folders WHERE id = :folderId")
+    suspend fun delete(folderId: Int)
 }
