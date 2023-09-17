@@ -3,8 +3,9 @@ package com.gzaber.keepnote.data.source
 import com.gzaber.keepnote.data.source.room.NoteDao
 import com.gzaber.keepnote.data.source.room.NoteEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RoomNotesDataSource(
+class RoomNotesDataSource @Inject constructor(
     private val noteDao: NoteDao
 ) : NotesDataSource {
 
@@ -20,15 +21,15 @@ class RoomNotesDataSource(
         return noteDao.observeById(noteId)
     }
 
-    override suspend fun insertNote(note: NoteEntity) {
-        noteDao.insert(note)
+    override suspend fun createNote(note: NoteEntity) {
+        noteDao.create(note)
     }
 
     override suspend fun updateNote(note: NoteEntity) {
         noteDao.update(note)
     }
 
-    override suspend fun deleteNote(note: NoteEntity) {
-        noteDao.delete(note)
+    override suspend fun deleteNote(noteId: Int) {
+        noteDao.delete(noteId)
     }
 }

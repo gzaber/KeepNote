@@ -1,9 +1,29 @@
 <resources>
     <string name="app_name">KeepNote</string>
 
-    <string name="content_desc_filter">Filter</string>
-    <string name="content_desc_grid_view">Grid view</string>
-    <string name="content_desc_list_view">List view</string>
-    <string name="content_desc_note">Note</string>
-    <string name="content_desc_folder">Folder</string>
+    <string name="error_message">Some error occurred</string>
+
+    <string name="filter">Filter</string>
+    <string name="grid_view">Grid view</string>
+    <string name="list_view">List view</string>
+    <string name="note">Note</string>
+    <string name="folder">Folder</string>
+    <string name="create_element">Create element</string>
+    <string name="create_folder">Create folder</string>
+    <string name="create_note">Create note</string>
+    <string name="edit_element">Edit element</string>
+    <string name="delete_element">Delete element</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    <string name="filter_by">Filter by</string>
+    <string name="radio_name">name</string>
+    <string name="radio_date">date</string>
+    <string name="order">Order</string>
+    <string name="radio_asc">ascending</string>
+    <string name="radio_desc">descending</string>
+    <string name="type_of_elements">Type of elements</string>
+    <string name="radio_folders_first">folders first</string>
+    <string name="radio_notes_first">notes first</string>
+    <string name="radio_none">none</string>
 </resources>

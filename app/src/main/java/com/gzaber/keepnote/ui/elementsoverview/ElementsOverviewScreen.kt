@@ -1,248 +1,178 @@
 package com.gzaber.keepnote.ui.elementsoverview
 
-import android.graphics.Color.toArgb
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.theme.KeepNoteTheme
+import com.gzaber.keepnote.ui.elementsoverview.components.CreateElementBottomSheetContent
+import com.gzaber.keepnote.ui.elementsoverview.components.EditDeleteElementBottomSheetContent
+import com.gzaber.keepnote.ui.elementsoverview.components.ElementsAppBar
+import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewContent
+import com.gzaber.keepnote.ui.elementsoverview.components.FilterBottomSheetContent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementsOverviewScreen(
     viewModel: ElementsOverviewViewModel = hiltViewModel()
 ) {
-    //val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var bottomSheetStatus by remember { mutableStateOf<BottomSheetStatus>(BottomSheetStatus.Hidden) }
+
+    fun hideBottomSheet() {
+        scope.launch { sheetState.hide() }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                bottomSheetStatus = BottomSheetStatus.Hidden
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             ElementsAppBar(
-                onFilterClick = {},
-                onChangeViewClick = {}
+                onFilterClick = {
+                    bottomSheetStatus = BottomSheetStatus.FilterElements
+                },
+                onChangeViewClick = viewModel::toggleView,
+                isGridView = uiState.isGridView
             )
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues))
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ElementsAppBar(
-    onFilterClick: () -> Unit,
-    onChangeViewClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = { Text(text = stringResource(id = R.string.app_name)) },
-        actions = {
-            IconButton(
-                onClick = { /*TODO*/ }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_filter),
-                    contentDescription = stringResource(id = R.string.content_desc_filter)
-                )
-            }
-            IconButton(
-                onClick = { /*TODO*/ })
-            {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_grid_view),
-                    contentDescription = stringResource(id = R.string.content_desc_grid_view)
-                )
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun ElementsAppBarPreview() {
-    KeepNoteTheme {
-        ElementsAppBar(
-            onFilterClick = { },
-            onChangeViewClick = { }
-        )
-    }
-}
-
-@Composable
-fun ElementGridItem(
-    element: Element,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = element.name,
-                fontWeight = FontWeight.Bold
-            )
-            if (element.isNote) Text(text = element.content)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = { bottomSheetStatus = BottomSheetStatus.CreateElement }
             ) {
-                if (element.isNote) Icon(
-                    painter = painterResource(id = R.drawable.ic_note),
-                    contentDescription = stringResource(
-                        id = R.string.content_desc_note
-                    )
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = stringResource(id = R.string.create_element)
                 )
-                else Icon(
-                    painter = painterResource(id = R.drawable.ic_folder),
-                    contentDescription = stringResource(
-                        id = R.string.content_desc_folder
-                    )
-                )
-                Box(
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+    ) { paddingValues ->
+
+        when (uiState.status) {
+            Status.LOADING -> CircularProgressIndicator()
+            Status.SUCCESS ->
+                ElementsOverviewContent(
+                    elements = uiState.elements,
+                    isGridView = uiState.isGridView,
+                    contentPadding = paddingValues,
+                    onItemClick = { },
+                    onItemLongClick = {
+                        bottomSheetStatus = BottomSheetStatus.EditDeleteElement(element = it)
+                    },
                     modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Color(element.color))
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
                 )
+
+            Status.FAILURE -> Text(
+                text = stringResource(id = R.string.error_message),
+                fontWeight = FontWeight.Bold,
+                color = Color.Red
+            )
+        }
+
+        if (bottomSheetStatus != BottomSheetStatus.Hidden) {
+            ModalBottomSheet(
+                onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
+                sheetState = sheetState
+            ) {
+                Box(
+                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp)
+                ) {
+                    when (bottomSheetStatus) {
+                        BottomSheetStatus.CreateElement -> {
+                            CreateElementBottomSheetContent(
+                                folderButtonOnClick = {
+                                    viewModel.createFolder()
+                                    hideBottomSheet()
+                                },
+                                noteButtonOnClick = {
+                                    viewModel.createNote()
+                                    hideBottomSheet()
+                                }
+                            )
+                        }
+
+                        is BottomSheetStatus.EditDeleteElement -> {
+                            EditDeleteElementBottomSheetContent(
+                                editButtonOnClick = { /*TODO*/ },
+                                deleteButtonOnClick = {
+                                    viewModel.deleteElement(
+                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
+                                    )
+                                    hideBottomSheet()
+                                }
+                            )
+                        }
+
+                        BottomSheetStatus.FilterElements -> {
+                            FilterBottomSheetContent()
+                        }
+
+                        else -> {}
+                    }
+                }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun NoteElementGridItemPreview() {
-    KeepNoteTheme {
-        ElementGridItem(
-            element = Element(
-                isNote = true,
-                name = "Note title",
-                content = "Lorem ipsum dolor sit amet",
-                color = Color.Red.toArgb()
-            )
-        )
-    }
+sealed class BottomSheetStatus {
+    object Hidden : BottomSheetStatus()
+    object CreateElement : BottomSheetStatus()
+    data class EditDeleteElement(val element: Element) : BottomSheetStatus()
+    object FilterElements : BottomSheetStatus()
 }
 
-@Preview
-@Composable
-fun FolderElementGridItemPreview() {
-    KeepNoteTheme {
-        ElementGridItem(
-            element = Element(
-                isNote = false,
-                name = "Folder name",
-                content = "",
-                color = Color.Blue.toArgb()
-            )
-        )
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//fun hideBottomSheet(
+//    scope: CoroutineScope,
+//    sheetState: SheetState,
+//    changeSheetStatus: () -> Unit
+//) {
+//    scope.launch { sheetState.hide() }.invokeOnCompletion {
+//        if (!sheetState.isVisible) {
+//            changeSheetStatus()
+//        }
+//    }
+//}
 
 
-@Composable
-fun ElementListItem(
-    element: Element,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            if (element.isNote) Icon(
-                painter = painterResource(id = R.drawable.ic_note),
-                contentDescription = stringResource(
-                    id = R.string.content_desc_note
-                )
-            )
-            else Icon(
-                painter = painterResource(id = R.drawable.ic_folder),
-                contentDescription = stringResource(
-                    id = R.string.content_desc_folder
-                )
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = element.name,
-                    fontWeight = FontWeight.Bold
-                )
-                if (element.isNote) Text(text = element.content)
-            }
-            Spacer(modifier = Modifier.weight(1F))
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape)
-                    .background(Color(element.color))
-            )
-        }
-    }
-}
 
-@Preview
-@Composable
-fun NoteElementListItemPreview() {
-    KeepNoteTheme {
-        ElementListItem(
-            element = Element(
-                isNote = true,
-                name = "Note title",
-                content = "Lorem ipsum dolor sit amet",
-                color = Color.Magenta.toArgb()
-            )
-        )
-    }
-}
 
-@Preview
-@Composable
-fun FolderElementListItemPreview() {
-    KeepNoteTheme {
-        ElementListItem(
-            element = Element(
-                isNote = false,
-                name = "Folder name",
-                content = "",
-                color = Color.Green.toArgb()
-            )
-        )
-    }
-}
+
+
 

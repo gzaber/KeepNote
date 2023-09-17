@@ -3,8 +3,9 @@ package com.gzaber.keepnote.data.source
 import com.gzaber.keepnote.data.source.room.FolderDao
 import com.gzaber.keepnote.data.source.room.FolderEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RoomFoldersDataSource(
+class RoomFoldersDataSource @Inject constructor(
     private val folderDao: FolderDao
 ) : FoldersDataSource {
 
@@ -16,15 +17,15 @@ class RoomFoldersDataSource(
         return folderDao.observeById(folderId)
     }
 
-    override suspend fun insertFolder(folder: FolderEntity) {
-        folderDao.insert(folder)
+    override suspend fun createFolder(folder: FolderEntity) {
+        folderDao.create(folder)
     }
 
     override suspend fun updateFolder(folder: FolderEntity) {
         folderDao.update(folder)
     }
 
-    override suspend fun deleteFolder(folder: FolderEntity) {
-        folderDao.delete(folder)
+    override suspend fun deleteFolder(folderId: Int) {
+        folderDao.delete(folderId)
     }
 }

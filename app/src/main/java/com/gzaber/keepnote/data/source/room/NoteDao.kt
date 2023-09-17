@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes WHERE folder_id = null")
+    @Query("SELECT * FROM notes WHERE folder_id ISNULL")
     fun observeFirstLevel(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM notes WHERE folder_id = :folderId")
@@ -21,11 +21,11 @@ interface NoteDao {
     fun observeById(noteId: Int): Flow<NoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(note: NoteEntity)
+    suspend fun create(note: NoteEntity)
 
     @Update
-    fun update(note: NoteEntity)
+    suspend fun update(note: NoteEntity)
 
-    @Delete
-    fun delete(note: NoteEntity)
+    @Query("DELETE FROM notes WHERE id = :noteId")
+    suspend fun delete(noteId: Int)
 }
