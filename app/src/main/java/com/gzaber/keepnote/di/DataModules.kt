@@ -11,6 +11,8 @@ import com.gzaber.keepnote.data.source.NotesDataSource
 import com.gzaber.keepnote.data.source.RoomFoldersDataSource
 import com.gzaber.keepnote.data.source.RoomNotesDataSource
 import com.gzaber.keepnote.data.source.room.AppDatabase
+import com.gzaber.keepnote.data.source.room.FolderDao
+import com.gzaber.keepnote.data.source.room.NoteDao
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -58,4 +60,12 @@ object DatabaseModule {
             "app-database"
         ).build()
     }
+
+    @Singleton
+    @Provides
+    fun provideFolderDao(database: AppDatabase): FolderDao = database.folderDao()
+
+    @Singleton
+    @Provides
+    fun providerNoteDao(database: AppDatabase): NoteDao = database.noteDao()
 }

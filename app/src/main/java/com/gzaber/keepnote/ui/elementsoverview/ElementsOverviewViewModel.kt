@@ -1,5 +1,8 @@
 package com.gzaber.keepnote.ui.elementsoverview
 
+import android.util.Log
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gzaber.keepnote.data.repository.FoldersRepository
@@ -12,32 +15,53 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class ElementsOverviewViewModel @Inject constructor(
-    foldersRepository: FoldersRepository,
-    notesRepository: NotesRepository
+    private val foldersRepository: FoldersRepository,
+    private val notesRepository: NotesRepository
 ) : ViewModel() {
 
-   private val _uiState: StateFlow<UiState> = combine(
+    private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private var _elementsResult = combine(
         foldersRepository.getAllFoldersFlow(),
         notesRepository.getFirstLevelNotesFlow()
-    ) { folders, notes ->
-        convertToElements(folders, notes)
+    )
+    { folders, notes ->
+        ElementsFlowResult.Success(elements = convertToElements(folders, notes))
     }
-        .map {
-            FlowResult.Success(it)
+        .catch {
+            ElementsFlowResult.Error
         }
-        .catch<FlowResult> {
-            emit(FlowResult.Error(message = "Error"))
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = ElementsFlowResult.Loading
+        )
+
+    private val _uiState = combine(_elementsResult, _isGridView) { elementsResult, isGridView ->
+        when (elementsResult) {
+            is ElementsFlowResult.Success -> {
+                UiState(
+                    status = Status.SUCCESS,
+                    elements = elementsResult.elements,
+                    isGridView = isGridView
+                )
+            }
+
+            ElementsFlowResult.Error -> {
+                UiState(status = Status.FAILURE)
+            }
+
+            ElementsFlowResult.Loading -> {
+                UiState(status = Status.LOADING)
+            }
         }
-        .map {
-            UiState(flowResult = it)
-        }
+    }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -45,6 +69,44 @@ class ElementsOverviewViewModel @Inject constructor(
         )
 
     val uiState: StateFlow<UiState> = _uiState
+
+    fun toggleView() {
+        _isGridView.value = !_isGridView.value
+    }
+
+    fun createFolder() {
+        viewModelScope.launch {
+            foldersRepository.createFolder(
+                Folder(
+                    name = "Folder name",
+                    color = Color.Red.toArgb()
+                )
+            )
+        }
+    }
+
+    fun createNote() {
+        viewModelScope.launch {
+            notesRepository.createNote(
+                Note(
+                    title = "Note title",
+                    content = "Note content",
+                    color = Color.Green.toArgb()
+                )
+            )
+        }
+    }
+
+    fun deleteElement(element: Element) {
+        viewModelScope.launch {
+            if (element.isNote) {
+                notesRepository.deleteNote(element.id!!)
+            } else {
+                foldersRepository.deleteFolder(element.id!!)
+            }
+
+        }
+    }
 
 
     private fun convertToElements(folders: List<Folder>, notes: List<Note>): List<Element> {
@@ -79,7 +141,9 @@ class ElementsOverviewViewModel @Inject constructor(
 }
 
 data class UiState(
-    val flowResult: FlowResult = FlowResult.Loading
+    val status: Status = Status.LOADING,
+    val elements: List<Element> = listOf(),
+    val isGridView: Boolean = false
 )
 
 data class Element(
@@ -91,8 +155,12 @@ data class Element(
     val date: Date = Date()
 )
 
-sealed class FlowResult {
-    data class Success(val elements: List<Element>) : FlowResult()
-    data class Error(val message: String) : FlowResult()
-    object Loading : FlowResult()
+sealed class ElementsFlowResult {
+    data class Success(val elements: List<Element>) : ElementsFlowResult()
+    object Error : ElementsFlowResult()
+    object Loading : ElementsFlowResult()
+}
+
+enum class Status {
+    LOADING, SUCCESS, FAILURE
 }
