@@ -153,7 +153,19 @@ data class Element(
     val content: String,
     val color: Int,
     val date: Date = Date()
-)
+) {
+    companion object Factory {
+        fun empty(): Element {
+            return Element(
+                isNote = true,
+                name = "",
+                content = "",
+                color = Color.Red.toArgb()
+            )
+        }
+    }
+}
+
 
 sealed class ElementsFlowResult {
     data class Success(val elements: List<Element>) : ElementsFlowResult()
