@@ -11,10 +11,16 @@
     <string name="create_element">Create element</string>
     <string name="create_folder">Create folder</string>
     <string name="create_note">Create note</string>
+    <string name="update_note">Update note</string>
+    <string name="update_folder">Update folder</string>
     <string name="edit_element">Edit element</string>
     <string name="delete_element">Delete element</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="select_color">Select color</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
 
     <string name="filter_by">Filter by</string>
     <string name="radio_name">name</string>
