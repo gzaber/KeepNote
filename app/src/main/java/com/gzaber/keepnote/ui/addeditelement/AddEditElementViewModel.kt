@@ -1,6 +1,5 @@
 package com.gzaber.keepnote.ui.addeditelement
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -12,13 +11,13 @@ import com.gzaber.keepnote.data.repository.model.Folder
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.elementsoverview.Element
 import com.gzaber.keepnote.ui.elementsoverview.Status
+import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,15 +35,15 @@ class AddEditElementViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val elementId: Int? = savedStateHandle[""] ?: 10
-    private val isNote: Boolean = savedStateHandle[""] ?: false
+    private val elementId: String? = savedStateHandle[KeepNoteDestinationArgs.ELEMENT_ID_ARG]
+    private val isNote: Boolean = savedStateHandle[KeepNoteDestinationArgs.IS_NOTE_ARG] ?: false
 
     private val _uiState = MutableStateFlow(AddEditElementUiState())
     val uiState: StateFlow<AddEditElementUiState> = _uiState.asStateFlow()
 
     init {
         if (elementId != null) {
-            readElement(elementId, isNote)
+            readElement(elementId.toInt(), isNote)
         }
         _uiState.update {
             it.copy(

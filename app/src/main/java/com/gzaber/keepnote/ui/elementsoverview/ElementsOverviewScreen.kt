@@ -42,6 +42,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementsOverviewScreen(
+    onCreateElement: (Boolean) -> Unit,
+    onUpdateElement: (Boolean, String?) -> Unit,
     viewModel: ElementsOverviewViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -116,11 +118,11 @@ fun ElementsOverviewScreen(
                         BottomSheetStatus.CreateElement -> {
                             CreateElementBottomSheetContent(
                                 folderButtonOnClick = {
-                                    viewModel.createFolder()
+                                    onCreateElement(false)
                                     hideBottomSheet()
                                 },
                                 noteButtonOnClick = {
-                                    viewModel.createNote()
+                                    onCreateElement(true)
                                     hideBottomSheet()
                                 }
                             )
@@ -128,7 +130,12 @@ fun ElementsOverviewScreen(
 
                         is BottomSheetStatus.EditDeleteElement -> {
                             EditDeleteElementBottomSheetContent(
-                                editButtonOnClick = { /*TODO*/ },
+                                editButtonOnClick = {
+                                    onUpdateElement(
+                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
+                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id.toString()
+                                    )
+                                },
                                 deleteButtonOnClick = {
                                     viewModel.deleteElement(
                                         (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
@@ -156,19 +163,6 @@ sealed class BottomSheetStatus {
     data class EditDeleteElement(val element: Element) : BottomSheetStatus()
     object FilterElements : BottomSheetStatus()
 }
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//fun hideBottomSheet(
-//    scope: CoroutineScope,
-//    sheetState: SheetState,
-//    changeSheetStatus: () -> Unit
-//) {
-//    scope.launch { sheetState.hide() }.invokeOnCompletion {
-//        if (!sheetState.isVisible) {
-//            changeSheetStatus()
-//        }
-//    }
-//}
 
 
 
