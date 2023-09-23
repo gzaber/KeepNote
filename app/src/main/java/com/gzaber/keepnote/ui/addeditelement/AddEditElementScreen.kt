@@ -74,6 +74,7 @@ fun AddEditElementScreen(
                     contentPadding = paddingValues,
                     title = uiState.element.name,
                     content = uiState.element.content,
+                    color = Color(uiState.element.color),
                     onTitleChange = viewModel::onTitleChanged,
                     onContentChange = viewModel::onContentChanged,
                     onColorSelect = viewModel::onColorChanged,
@@ -154,11 +155,12 @@ fun ColorCircle(
 @Composable
 fun ColorPicker(
     onColorSelect: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currentColor: Color? = null
 ) {
     val colors = listOf(Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Gray)
     var selectedColor by remember {
-        mutableStateOf(colors.first())
+        mutableStateOf(currentColor ?: colors.first())
     }
 
     Row(
@@ -199,7 +201,8 @@ fun AddEditElementContent(
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     onColorSelect: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color? = null
 ) {
     Column(
         modifier = modifier.padding(contentPadding)
@@ -222,7 +225,8 @@ fun AddEditElementContent(
             )
         }
         ColorPicker(
-            onColorSelect = onColorSelect
+            onColorSelect = onColorSelect,
+            currentColor = color,
         )
     }
 }
