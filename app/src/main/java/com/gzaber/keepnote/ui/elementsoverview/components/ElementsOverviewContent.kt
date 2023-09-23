@@ -3,9 +3,6 @@ package com.gzaber.keepnote.ui.elementsoverview.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -18,8 +15,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.gzaber.keepnote.ui.elementsoverview.Element
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
+import com.gzaber.keepnote.ui.utils.model.Element
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -46,7 +43,7 @@ fun ElementsOverviewContent(
                 ElementItem(
                     isGridItem = true,
                     element = element,
-                    onClick =  onItemClick ,
+                    onClick = onItemClick,
                     onLongClick = onItemLongClick
                 )
             }
@@ -58,7 +55,7 @@ fun ElementsOverviewContent(
             verticalArrangement = Arrangement.spacedBy(verticalSpace),
             modifier = modifier
         ) {
-            items(elements) { element ->
+          items(elements) { element ->
                 ElementItem(
                     element = element,
                     onClick = onItemClick,

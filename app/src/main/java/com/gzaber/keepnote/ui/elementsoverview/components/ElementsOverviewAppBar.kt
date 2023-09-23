@@ -16,7 +16,7 @@ import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ElementsAppBar(
+fun ElementsOverviewAppBar(
     onFilterClick: () -> Unit,
     onChangeViewClick: () -> Unit,
     isGridView: Boolean,
@@ -51,9 +51,9 @@ fun ElementsAppBar(
 
 @Preview
 @Composable
-fun ElementsAppBarPreview() {
+fun ElementsOverviewAppBarPreview() {
     KeepNoteTheme {
-        ElementsAppBar(
+        ElementsOverviewAppBar(
             onFilterClick = { },
             onChangeViewClick = { },
             isGridView = true

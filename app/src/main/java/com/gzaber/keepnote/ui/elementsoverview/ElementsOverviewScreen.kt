@@ -7,17 +7,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,25 +25,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.elementsoverview.components.CreateElementBottomSheetContent
 import com.gzaber.keepnote.ui.elementsoverview.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.elementsoverview.components.ElementsAppBar
+import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewAppBar
 import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewContent
 import com.gzaber.keepnote.ui.elementsoverview.components.FilterBottomSheetContent
-import kotlinx.coroutines.CoroutineScope
+import com.gzaber.keepnote.ui.utils.components.LoadingBox
+import com.gzaber.keepnote.ui.utils.model.Element
 import kotlinx.coroutines.launch
+
+
+sealed class BottomSheetStatus {
+    object Hidden : BottomSheetStatus()
+    object CreateElement : BottomSheetStatus()
+    data class EditDeleteElement(val element: Element) : BottomSheetStatus()
+    object FilterElements : BottomSheetStatus()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementsOverviewScreen(
     onCreateElement: (Boolean) -> Unit,
     onUpdateElement: (Boolean, String?) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: ElementsOverviewViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,8 +68,9 @@ fun ElementsOverviewScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            ElementsAppBar(
+            ElementsOverviewAppBar(
                 onFilterClick = {
                     bottomSheetStatus = BottomSheetStatus.FilterElements
                 },
@@ -84,85 +93,83 @@ fun ElementsOverviewScreen(
     ) { paddingValues ->
 
         when (uiState.status) {
-            Status.LOADING -> CircularProgressIndicator()
-            Status.SUCCESS ->
-                ElementsOverviewContent(
-                    elements = uiState.elements,
-                    isGridView = uiState.isGridView,
-                    contentPadding = paddingValues,
-                    onItemClick = { },
-                    onItemLongClick = {
-                        bottomSheetStatus = BottomSheetStatus.EditDeleteElement(element = it)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                )
+            ElementsOverviewStatus.LOADING -> LoadingBox(paddingValues = paddingValues)
 
-            Status.FAILURE -> Text(
-                text = stringResource(id = R.string.error_message),
-                fontWeight = FontWeight.Bold,
-                color = Color.Red
+            else -> ElementsOverviewContent(
+                elements = uiState.elements,
+                isGridView = uiState.isGridView,
+                contentPadding = paddingValues,
+                onItemClick = { },
+                onItemLongClick = {
+                    bottomSheetStatus = BottomSheetStatus.EditDeleteElement(element = it)
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
             )
         }
+    }
 
-        if (bottomSheetStatus != BottomSheetStatus.Hidden) {
-            ModalBottomSheet(
-                onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
-                sheetState = sheetState
+    if (uiState.status == ElementsOverviewStatus.FAILURE) {
+        val errorMessage = stringResource(id = R.string.error_message)
+        LaunchedEffect(uiState.status) {
+            snackbarHostState.showSnackbar(errorMessage)
+        }
+    }
+
+
+    if (bottomSheetStatus != BottomSheetStatus.Hidden) {
+        // TODO: extract composable
+        ModalBottomSheet(
+            onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
+            sheetState = sheetState
+        ) {
+            Box(
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp)
             ) {
-                Box(
-                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp)
-                ) {
-                    when (bottomSheetStatus) {
-                        BottomSheetStatus.CreateElement -> {
-                            CreateElementBottomSheetContent(
-                                folderButtonOnClick = {
-                                    onCreateElement(false)
-                                    hideBottomSheet()
-                                },
-                                noteButtonOnClick = {
-                                    onCreateElement(true)
-                                    hideBottomSheet()
-                                }
-                            )
-                        }
-
-                        is BottomSheetStatus.EditDeleteElement -> {
-                            EditDeleteElementBottomSheetContent(
-                                editButtonOnClick = {
-                                    onUpdateElement(
-                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
-                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id.toString()
-                                    )
-                                },
-                                deleteButtonOnClick = {
-                                    viewModel.deleteElement(
-                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
-                                    )
-                                    hideBottomSheet()
-                                }
-                            )
-                        }
-
-                        BottomSheetStatus.FilterElements -> {
-                            FilterBottomSheetContent()
-                        }
-
-                        else -> {}
+                when (bottomSheetStatus) {
+                    BottomSheetStatus.CreateElement -> {
+                        CreateElementBottomSheetContent(
+                            folderButtonOnClick = {
+                                onCreateElement(false)
+                                hideBottomSheet()
+                            },
+                            noteButtonOnClick = {
+                                onCreateElement(true)
+                                hideBottomSheet()
+                            }
+                        )
                     }
+
+                    is BottomSheetStatus.EditDeleteElement -> {
+                        EditDeleteElementBottomSheetContent(
+                            editButtonOnClick = {
+                                onUpdateElement(
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id.toString()
+                                )
+                            },
+                            deleteButtonOnClick = {
+                                viewModel.deleteElement(
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
+                                )
+                                hideBottomSheet()
+                            }
+                        )
+                    }
+
+                    BottomSheetStatus.FilterElements -> {
+                        FilterBottomSheetContent()
+                    }
+
+                    else -> {}
                 }
             }
         }
     }
 }
 
-sealed class BottomSheetStatus {
-    object Hidden : BottomSheetStatus()
-    object CreateElement : BottomSheetStatus()
-    data class EditDeleteElement(val element: Element) : BottomSheetStatus()
-    object FilterElements : BottomSheetStatus()
-}
+
 
 
 
