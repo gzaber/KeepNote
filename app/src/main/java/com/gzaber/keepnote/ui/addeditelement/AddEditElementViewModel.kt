@@ -193,7 +193,7 @@ fun Element.toFolder(): Folder {
 fun Folder.toElement(): Element {
     return Element(
         id = id,
-        isNote = true,
+        isNote = false,
         name = name,
         content = "",
         color = color,
