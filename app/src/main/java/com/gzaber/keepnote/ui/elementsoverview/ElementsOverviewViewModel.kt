@@ -74,28 +74,28 @@ class ElementsOverviewViewModel @Inject constructor(
         _isGridView.value = !_isGridView.value
     }
 
-    fun createFolder() {
-        viewModelScope.launch {
-            foldersRepository.createFolder(
-                Folder(
-                    name = "Folder name",
-                    color = Color.Red.toArgb()
-                )
-            )
-        }
-    }
+//    fun createFolder() {
+//        viewModelScope.launch {
+//            foldersRepository.createFolder(
+//                Folder(
+//                    name = "Folder name",
+//                    color = Color.Red.toArgb()
+//                )
+//            )
+//        }
+//    }
 
-    fun createNote() {
-        viewModelScope.launch {
-            notesRepository.createNote(
-                Note(
-                    title = "Note title",
-                    content = "Note content",
-                    color = Color.Green.toArgb()
-                )
-            )
-        }
-    }
+//    fun createNote() {
+//        viewModelScope.launch {
+//            notesRepository.createNote(
+//                Note(
+//                    title = "Note title",
+//                    content = "Note content",
+//                    color = Color.Green.toArgb()
+//                )
+//            )
+//        }
+//    }
 
     fun deleteElement(element: Element) {
         viewModelScope.launch {

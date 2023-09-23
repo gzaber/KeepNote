@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.gzaber.keepnote.ui.addeditelement.AddEditElementScreen
 import com.gzaber.keepnote.ui.elementsoverview.ElementsOverviewScreen
+import com.gzaber.keepnote.ui.navigation.KeepNoteNavGraph
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KeepNoteTheme {
-                AddEditElementScreen()
+                KeepNoteNavGraph()
             }
         }
     }
