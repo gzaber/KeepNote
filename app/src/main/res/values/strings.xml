@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KeepNote</string>
 
-    <string name="error_message">Some error occurred</string>
+    <string name="error_message">Something went wrong</string>
 
     <string name="filter">Filter</string>
     <string name="grid_view">Grid view</string>
@@ -21,6 +21,7 @@
     <string name="select_color">Select color</string>
     <string name="title">Title</string>
     <string name="content">Content</string>
+    <string name="navigate_back">Navigate back</string>
 
     <string name="filter_by">Filter by</string>
     <string name="radio_name">name</string>

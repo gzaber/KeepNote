@@ -2,8 +2,8 @@ package com.gzaber.keepnote.data.repository
 
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.data.source.NotesDataSource
-import com.gzaber.keepnote.data.utils.toEntity
-import com.gzaber.keepnote.data.utils.toModel
+import com.gzaber.keepnote.data.repository.model.toEntity
+import com.gzaber.keepnote.data.repository.model.toModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

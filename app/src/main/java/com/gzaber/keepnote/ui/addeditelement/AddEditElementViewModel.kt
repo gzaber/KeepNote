@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
-import com.gzaber.keepnote.data.repository.model.Folder
-import com.gzaber.keepnote.data.repository.model.Note
-import com.gzaber.keepnote.ui.elementsoverview.Element
-import com.gzaber.keepnote.ui.elementsoverview.Status
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
+import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.utils.model.toElement
+import com.gzaber.keepnote.ui.utils.model.toFolder
+import com.gzaber.keepnote.ui.utils.model.toNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +22,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+enum class AddEditElementStatus {
+    LOADING, SUCCESS, FAILURE, SAVE_SUCCESS
+}
+
+enum class AddEditElementMode {
+    CREATE_NOTE,
+    CREATE_FOLDER,
+    UPDATE_NOTE,
+    UPDATE_FOLDER
+}
+
 data class AddEditElementUiState(
-    val status: Status = Status.SUCCESS,
-    val mode: AddEditMode = AddEditMode.CREATE_NOTE,
+    val status: AddEditElementStatus = AddEditElementStatus.SUCCESS,
+    val mode: AddEditElementMode = AddEditElementMode.CREATE_NOTE,
     val element: Element = Element.empty()
 )
 
@@ -48,10 +60,10 @@ class AddEditElementViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 mode = when {
-                    elementId == null && isNote -> AddEditMode.CREATE_NOTE
-                    elementId == null && !isNote -> AddEditMode.CREATE_FOLDER
-                    elementId != null && isNote -> AddEditMode.UPDATE_NOTE
-                    else -> AddEditMode.UPDATE_FOLDER
+                    elementId == null && isNote -> AddEditElementMode.CREATE_NOTE
+                    elementId == null && !isNote -> AddEditElementMode.CREATE_FOLDER
+                    elementId != null && isNote -> AddEditElementMode.UPDATE_NOTE
+                    else -> AddEditElementMode.UPDATE_FOLDER
                 },
                 element = it.element.copy(isNote = isNote)
             )
@@ -84,31 +96,31 @@ class AddEditElementViewModel @Inject constructor(
 
     fun saveElement() {
         _uiState.update {
-            it.copy(status = Status.LOADING)
+            it.copy(status = AddEditElementStatus.LOADING)
         }
 
         try {
             viewModelScope.launch {
                 when (_uiState.value.mode) {
-                    AddEditMode.CREATE_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
-                    AddEditMode.CREATE_FOLDER -> foldersRepository.createFolder(_uiState.value.element.toFolder())
-                    AddEditMode.UPDATE_NOTE -> notesRepository.updateNote(_uiState.value.element.toNote())
-                    AddEditMode.UPDATE_FOLDER -> foldersRepository.updateFolder(_uiState.value.element.toFolder())
+                    AddEditElementMode.CREATE_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
+                    AddEditElementMode.CREATE_FOLDER -> foldersRepository.createFolder(_uiState.value.element.toFolder())
+                    AddEditElementMode.UPDATE_NOTE -> notesRepository.updateNote(_uiState.value.element.toNote())
+                    AddEditElementMode.UPDATE_FOLDER -> foldersRepository.updateFolder(_uiState.value.element.toFolder())
                 }
                 _uiState.update {
-                    it.copy(status = Status.SUCCESS)
+                    it.copy(status = AddEditElementStatus.SAVE_SUCCESS)
                 }
             }
         } catch (e: Throwable) {
             _uiState.update {
-                it.copy(status = Status.FAILURE)
+                it.copy(status = AddEditElementStatus.FAILURE)
             }
         }
     }
 
     private fun readElement(elementId: Int, isNote: Boolean) {
         _uiState.update {
-            it.copy(status = Status.LOADING)
+            it.copy(status = AddEditElementStatus.LOADING)
         }
         try {
             viewModelScope.launch {
@@ -116,13 +128,13 @@ class AddEditElementViewModel @Inject constructor(
                     notesRepository.getNoteByIdFlow(elementId)
                         .catch {
                             _uiState.update {
-                                it.copy(status = Status.FAILURE)
+                                it.copy(status = AddEditElementStatus.FAILURE)
                             }
                         }
                         .first().let { note ->
                             _uiState.update {
                                 it.copy(
-                                    status = Status.SUCCESS,
+                                    status = AddEditElementStatus.SUCCESS,
                                     element = note.toElement()
                                 )
                             }
@@ -131,13 +143,13 @@ class AddEditElementViewModel @Inject constructor(
                     foldersRepository.getFolderByIdFlow(elementId)
                         .catch {
                             _uiState.update {
-                                it.copy(status = Status.FAILURE)
+                                it.copy(status = AddEditElementStatus.FAILURE)
                             }
                         }
                         .first().let { folder ->
                             _uiState.update {
                                 it.copy(
-                                    status = Status.SUCCESS,
+                                    status = AddEditElementStatus.SUCCESS,
                                     element = folder.toElement()
                                 )
                             }
@@ -146,56 +158,10 @@ class AddEditElementViewModel @Inject constructor(
             }
         } catch (e: Throwable) {
             _uiState.update {
-                it.copy(status = Status.FAILURE)
+                it.copy(status = AddEditElementStatus.FAILURE)
             }
         }
     }
 }
 
-enum class AddEditMode {
-    CREATE_NOTE,
-    CREATE_FOLDER,
-    UPDATE_NOTE,
-    UPDATE_FOLDER
-}
 
-fun Element.toNote(): Note {
-    return Note(
-        id = id,
-        title = name,
-        content = content,
-        color = color,
-        date = date
-    )
-}
-
-fun Note.toElement(): Element {
-    return Element(
-        id = id,
-        isNote = true,
-        name = title,
-        content = content,
-        color = color,
-        date = date
-    )
-}
-
-fun Element.toFolder(): Folder {
-    return Folder(
-        id = id,
-        name = name,
-        color = color,
-        date = date
-    )
-}
-
-fun Folder.toElement(): Element {
-    return Element(
-        id = id,
-        isNote = false,
-        name = name,
-        content = "",
-        color = color,
-        date = date
-    )
-}

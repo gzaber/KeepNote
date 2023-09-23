@@ -54,7 +54,10 @@ fun KeepNoteNavGraph(
                 navArgument(ELEMENT_ID_ARG) { type = NavType.StringType; nullable = true }
             )
         ) {
-            AddEditElementScreen()
+            AddEditElementScreen(
+                onBackClick = { navController.popBackStack() },
+                onSaved = { navController.popBackStack() }
+            )
 
         }
     }
