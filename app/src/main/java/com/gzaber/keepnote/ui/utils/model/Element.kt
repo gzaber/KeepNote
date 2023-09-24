@@ -6,6 +6,7 @@ import java.util.Date
 
 data class Element(
     val id: Int? = null,
+    val folderId: Int? = null,
     val isNote: Boolean,
     val name: String,
     val content: String,

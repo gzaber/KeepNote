@@ -11,7 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gzaber.keepnote.ui.addeditelement.AddEditElementScreen
 import com.gzaber.keepnote.ui.elementsoverview.ElementsOverviewScreen
+import com.gzaber.keepnote.ui.folderdetails.FolderDetailsScreen
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs.ELEMENT_ID_ARG
+import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs.FOLDER_ID_ARG
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs.IS_NOTE_ARG
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs.NOTE_ID_ARG
 import com.gzaber.keepnote.ui.notedetails.NoteDetailsScreen
@@ -37,13 +39,15 @@ fun KeepNoteNavGraph(
                 onElementClick = { isNote, id ->
                     if (isNote) {
                         navActions.navigateToNoteDetails(id.toString())
+                    } else {
+                        navActions.navigateToFolderDetails(id.toString())
                     }
                 },
                 onCreateElement = { isNote ->
-                    navActions.navigateToAddEditElement(isNote, null)
+                    navActions.navigateToAddEditElement(isNote, null, null)
                 },
                 onUpdateElement = { isNote, id ->
-                    navActions.navigateToAddEditElement(isNote, id.toString())
+                    navActions.navigateToAddEditElement(isNote, id.toString(), null)
                 }
             )
         }
@@ -52,7 +56,8 @@ fun KeepNoteNavGraph(
             route = KeepNoteDestinations.ADD_EDIT_ELEMENT_ROUTE,
             arguments = listOf(
                 navArgument(IS_NOTE_ARG) { type = NavType.BoolType },
-                navArgument(ELEMENT_ID_ARG) { type = NavType.StringType; nullable = true }
+                navArgument(ELEMENT_ID_ARG) { type = NavType.StringType; nullable = true },
+                navArgument(FOLDER_ID_ARG) { type = NavType.StringType; nullable = true }
             )
         ) {
             AddEditElementScreen(
@@ -71,6 +76,20 @@ fun KeepNoteNavGraph(
             NoteDetailsScreen(
                 onBackClick = { navController.popBackStack() },
                 onShareClick = { }
+            )
+        }
+
+        composable(
+            route = KeepNoteDestinations.FOLDER_DETAILS_ROUTE,
+            arguments = listOf(
+                navArgument(FOLDER_ID_ARG) { type = NavType.StringType }
+            )
+        ) {
+            FolderDetailsScreen(
+                onBackClick = { navController.popBackStack() },
+                onFabClick = { folderId ->
+                    navActions.navigateToAddEditElement(true, null, folderId.toString())
+                }
             )
         }
     }

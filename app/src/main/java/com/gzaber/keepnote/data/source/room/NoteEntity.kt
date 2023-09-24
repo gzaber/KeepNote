@@ -9,7 +9,7 @@ import java.util.Date
 
 @Entity(
     tableName = "notes",
-    indices = [Index(value = ["folder_id"], unique = true)],
+    indices = [Index(value = ["folder_id"])],
     foreignKeys = [
         ForeignKey(
             entity = FolderEntity::class,
