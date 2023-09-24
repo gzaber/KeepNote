@@ -26,7 +26,7 @@ fun ElementsOverviewContent(
     isGridView: Boolean,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    onItemClick: (Element) -> Unit = {},
+    onItemClick: (Boolean, Int) -> Unit = { _, _ -> },
     onItemLongClick: (Element) -> Unit = {},
     horizontalSpace: Dp = 8.dp,
     verticalSpace: Dp = 8.dp,
@@ -55,7 +55,7 @@ fun ElementsOverviewContent(
             verticalArrangement = Arrangement.spacedBy(verticalSpace),
             modifier = modifier
         ) {
-          items(elements) { element ->
+            items(elements) { element ->
                 ElementItem(
                     element = element,
                     onClick = onItemClick,

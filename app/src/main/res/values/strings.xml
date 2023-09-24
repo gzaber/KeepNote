@@ -22,6 +22,9 @@
     <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="navigate_back">Navigate back</string>
+    <string name="note_details">Note details</string>
+    <string name="folder_details">Folder details</string>
+    <string name="share_note">Share note</string>
 
     <string name="filter_by">Filter by</string>
     <string name="radio_name">name</string>

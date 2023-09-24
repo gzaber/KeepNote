@@ -49,8 +49,9 @@ sealed class BottomSheetStatus {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ElementsOverviewScreen(
+    onElementClick: (Boolean, Int) -> Unit,
     onCreateElement: (Boolean) -> Unit,
-    onUpdateElement: (Boolean, String?) -> Unit,
+    onUpdateElement: (Boolean, Int?) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: ElementsOverviewViewModel = hiltViewModel()
 ) {
@@ -99,7 +100,7 @@ fun ElementsOverviewScreen(
                 elements = uiState.elements,
                 isGridView = uiState.isGridView,
                 contentPadding = paddingValues,
-                onItemClick = { },
+                onItemClick = onElementClick,
                 onItemLongClick = {
                     bottomSheetStatus = BottomSheetStatus.EditDeleteElement(element = it)
                 },
@@ -146,7 +147,7 @@ fun ElementsOverviewScreen(
                             editButtonOnClick = {
                                 onUpdateElement(
                                     (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id.toString()
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id
                                 )
                             },
                             deleteButtonOnClick = {

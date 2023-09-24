@@ -89,14 +89,14 @@ fun ElementText(
 fun ElementItem(
     element: Element,
     modifier: Modifier = Modifier,
-    onClick: (Element) -> Unit = {},
+    onClick: (Boolean, Int) -> Unit = { _, _ -> },
     onLongClick: (Element) -> Unit = {},
     isGridItem: Boolean = false
 ) {
     Card(
         modifier = modifier
             .combinedClickable(
-                onClick = { onClick(element) },
+                onClick = { onClick(element.isNote, element.id!!) },
                 onLongClick = { onLongClick(element) }
             )
     ) {
