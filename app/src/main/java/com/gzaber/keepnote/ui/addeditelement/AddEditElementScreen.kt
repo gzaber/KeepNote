@@ -36,7 +36,7 @@ fun AddEditElementScreen(
             AddEditElementAppBar(
                 title = stringResource(
                     id = when (uiState.mode) {
-                        AddEditElementMode.CREATE_NOTE -> R.string.create_note
+                        AddEditElementMode.CREATE_NOTE, AddEditElementMode.CREATE_CHILD_NOTE -> R.string.create_note
                         AddEditElementMode.CREATE_FOLDER -> R.string.create_folder
                         AddEditElementMode.UPDATE_NOTE -> R.string.update_note
                         AddEditElementMode.UPDATE_FOLDER -> R.string.update_folder

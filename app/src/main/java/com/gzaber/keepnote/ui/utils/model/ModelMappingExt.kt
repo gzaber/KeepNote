@@ -8,6 +8,7 @@ import com.gzaber.keepnote.ui.utils.model.Element
 fun Element.toNote(): Note {
     return Note(
         id = id,
+        folderId = folderId,
         title = name,
         content = content,
         color = color,

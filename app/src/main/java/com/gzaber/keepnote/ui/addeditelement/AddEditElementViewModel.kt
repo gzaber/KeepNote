@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.addeditelement
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -28,6 +29,7 @@ enum class AddEditElementStatus {
 }
 
 enum class AddEditElementMode {
+    CREATE_CHILD_NOTE,
     CREATE_NOTE,
     CREATE_FOLDER,
     UPDATE_NOTE,
@@ -47,25 +49,32 @@ class AddEditElementViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val elementId: String? = savedStateHandle[KeepNoteDestinationArgs.ELEMENT_ID_ARG]
     private val isNote: Boolean = savedStateHandle[KeepNoteDestinationArgs.IS_NOTE_ARG] ?: false
+    private val elementId: String? = savedStateHandle[KeepNoteDestinationArgs.ELEMENT_ID_ARG]
+    private val folderId: String? = savedStateHandle[KeepNoteDestinationArgs.FOLDER_ID_ARG]
 
     private val _uiState = MutableStateFlow(AddEditElementUiState())
     val uiState: StateFlow<AddEditElementUiState> = _uiState.asStateFlow()
 
     init {
+        Log.e("logix", "saveElement: $isNote, $elementId, $folderId", )
+
         if (elementId != null) {
             readElement(elementId.toInt(), isNote)
         }
         _uiState.update {
             it.copy(
                 mode = when {
+                    folderId != null -> AddEditElementMode.CREATE_CHILD_NOTE
                     elementId == null && isNote -> AddEditElementMode.CREATE_NOTE
                     elementId == null && !isNote -> AddEditElementMode.CREATE_FOLDER
                     elementId != null && isNote -> AddEditElementMode.UPDATE_NOTE
                     else -> AddEditElementMode.UPDATE_FOLDER
                 },
-                element = it.element.copy(isNote = isNote)
+                element = it.element.copy(
+                    isNote = isNote,
+                    folderId = folderId?.toInt()
+                )
             )
         }
     }
@@ -102,6 +111,7 @@ class AddEditElementViewModel @Inject constructor(
         try {
             viewModelScope.launch {
                 when (_uiState.value.mode) {
+                    AddEditElementMode.CREATE_CHILD_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
                     AddEditElementMode.CREATE_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
                     AddEditElementMode.CREATE_FOLDER -> foldersRepository.createFolder(_uiState.value.element.toFolder())
                     AddEditElementMode.UPDATE_NOTE -> notesRepository.updateNote(_uiState.value.element.toNote())
