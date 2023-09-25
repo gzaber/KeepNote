@@ -73,7 +73,7 @@ class AddEditElementViewModel @Inject constructor(
                 },
                 element = it.element.copy(
                     isNote = isNote,
-                    folderId = folderId?.toInt()
+                    folderId = it.element.folderId ?: folderId?.toInt()
                 )
             )
         }

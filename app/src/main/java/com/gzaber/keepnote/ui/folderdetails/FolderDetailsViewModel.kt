@@ -79,4 +79,14 @@ class FolderDetailsViewModel @Inject constructor(
         _isGridView.value = _isGridView.value.not()
     }
 
+    fun deleteNote(noteId: Int) {
+        try {
+            viewModelScope.launch {
+                notesRepository.deleteNote(noteId)
+            }
+        } catch (e: Throwable) {
+
+        }
+    }
+
 }

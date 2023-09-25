@@ -19,6 +19,7 @@ fun Element.toNote(): Note {
 fun Note.toElement(): Element {
     return Element(
         id = id,
+        folderId = folderId,
         isNote = true,
         name = title,
         content = content,
