@@ -21,7 +21,7 @@ import com.gzaber.keepnote.ui.utils.model.Element
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ElementsOverviewContent(
+fun ElementsListGridContent(
     elements: List<Element>,
     isGridView: Boolean,
     contentPadding: PaddingValues,
@@ -68,9 +68,9 @@ fun ElementsOverviewContent(
 
 @Preview
 @Composable
-fun ListViewElementsContentPreview() {
+fun ElementsListContentPreview() {
     KeepNoteTheme {
-        ElementsOverviewContent(
+        ElementsListGridContent(
             isGridView = false,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
@@ -105,9 +105,9 @@ fun ListViewElementsContentPreview() {
 
 @Preview
 @Composable
-fun GridViewElementsContentPreview() {
+fun ElementsGridContentPreview() {
     KeepNoteTheme {
-        ElementsOverviewContent(
+        ElementsListGridContent(
             isGridView = true,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
