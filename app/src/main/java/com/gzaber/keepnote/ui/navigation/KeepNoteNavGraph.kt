@@ -86,9 +86,13 @@ fun KeepNoteNavGraph(
             )
         ) {
             FolderDetailsScreen(
+                onNoteClick = { id -> navActions.navigateToNoteDetails(id.toString()) },
                 onBackClick = { navController.popBackStack() },
                 onFabClick = { folderId ->
                     navActions.navigateToAddEditElement(true, null, folderId.toString())
+                },
+                onUpdateNote = { noteId ->
+                    navActions.navigateToAddEditElement(true, noteId.toString(), null)
                 }
             )
         }
