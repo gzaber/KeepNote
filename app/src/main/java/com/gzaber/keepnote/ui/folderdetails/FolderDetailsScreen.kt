@@ -32,6 +32,7 @@ import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetConte
 import com.gzaber.keepnote.ui.utils.components.ElementsOverviewContent
 import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
+import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 import com.gzaber.keepnote.ui.utils.model.toElement
 import kotlinx.coroutines.launch
@@ -78,15 +79,10 @@ fun FolderDetailsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = { onFabClick(uiState.folder.id!!) }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(id = R.string.create_note)
-                )
-            }
+            KeepNoteFloatingActionButton(
+                onClick = { onFabClick(uiState.folder.id!!) },
+                contentDescription = R.string.create_note
+            )
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
