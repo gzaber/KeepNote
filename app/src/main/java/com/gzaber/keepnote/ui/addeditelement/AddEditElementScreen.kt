@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.addeditelement.components.AddEditElementAppBar
 import com.gzaber.keepnote.ui.addeditelement.components.AddEditElementContent
+import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 
 
@@ -33,15 +33,13 @@ fun AddEditElementScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            AddEditElementAppBar(
-                title = stringResource(
-                    id = when (uiState.mode) {
-                        AddEditElementMode.CREATE_NOTE, AddEditElementMode.CREATE_CHILD_NOTE -> R.string.create_note
-                        AddEditElementMode.CREATE_FOLDER -> R.string.create_folder
-                        AddEditElementMode.UPDATE_NOTE -> R.string.update_note
-                        AddEditElementMode.UPDATE_FOLDER -> R.string.update_folder
-                    }
-                ),
+            KeepNoteAppBar(
+                title = when (uiState.mode) {
+                    AddEditElementMode.CREATE_NOTE, AddEditElementMode.CREATE_CHILD_NOTE -> R.string.create_note
+                    AddEditElementMode.CREATE_FOLDER -> R.string.create_folder
+                    AddEditElementMode.UPDATE_NOTE -> R.string.update_note
+                    AddEditElementMode.UPDATE_FOLDER -> R.string.update_folder
+                },
                 onBackClick = onBackClick,
                 onSaveClick = viewModel::saveElement
             )

@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.elementsoverview.components
+package com.gzaber.keepnote.ui.utils.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
