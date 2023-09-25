@@ -29,11 +29,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.elementsoverview.components.CreateElementBottomSheetContent
-import com.gzaber.keepnote.ui.elementsoverview.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewAppBar
-import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewContent
-import com.gzaber.keepnote.ui.elementsoverview.components.FilterBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.CreateElementBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.ElementsOverviewContent
+import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 import com.gzaber.keepnote.ui.utils.model.Element
 import kotlinx.coroutines.launch
@@ -71,12 +71,13 @@ fun ElementsOverviewScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            ElementsOverviewAppBar(
+            KeepNoteAppBar(
+                title = R.string.app_name,
+                isGridView = uiState.isGridView,
                 onFilterClick = {
                     bottomSheetStatus = BottomSheetStatus.FilterElements
                 },
                 onChangeViewClick = viewModel::toggleView,
-                isGridView = uiState.isGridView
             )
         },
         floatingActionButton = {
@@ -163,7 +164,7 @@ fun ElementsOverviewScreen(
                         FilterBottomSheetContent()
                     }
 
-                    else -> {}
+                    BottomSheetStatus.Hidden -> {}
                 }
             }
         }

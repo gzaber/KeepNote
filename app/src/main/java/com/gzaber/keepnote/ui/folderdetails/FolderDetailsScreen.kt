@@ -28,11 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.elementsoverview.ElementsOverviewStatus
-import com.gzaber.keepnote.ui.elementsoverview.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.elementsoverview.components.ElementsOverviewContent
-import com.gzaber.keepnote.ui.elementsoverview.components.FilterBottomSheetContent
-import com.gzaber.keepnote.ui.folderdetails.components.FolderDetailsAppBar
+import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.ElementsOverviewContent
+import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
+import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 import com.gzaber.keepnote.ui.utils.model.toElement
 import kotlinx.coroutines.launch
@@ -70,12 +69,11 @@ fun FolderDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            FolderDetailsAppBar(
+            KeepNoteAppBar(
+                title = R.string.folder_details,
                 isGridView = uiState.isGridView,
                 onBackClick = onBackClick,
-                onFilterClick = {
-                    bottomSheetStatus = BottomSheetStatus.FilterNotes
-                },
+                onFilterClick = { bottomSheetStatus = BottomSheetStatus.FilterNotes },
                 onChangeViewClick = viewModel::toggleView
             )
         },
@@ -146,7 +144,7 @@ fun FolderDetailsScreen(
                             FilterBottomSheetContent()
                         }
 
-                        else -> {}
+                        BottomSheetStatus.Hidden -> {}
                     }
                 }
             }

@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.notedetails.components.NoteDetailsAppBar
 import com.gzaber.keepnote.ui.notedetails.components.NoteDetailsContent
+import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 
 @Composable
@@ -31,7 +31,8 @@ fun NoteDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            NoteDetailsAppBar(
+            KeepNoteAppBar(
+                title = R.string.note_details,
                 onBackClick = onBackClick,
                 onShareClick = onShareClick
             )
