@@ -1,16 +1,9 @@
 package com.gzaber.keepnote.ui.folderdetails
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,10 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.utils.components.ElementsOverviewContent
+import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
 import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
+import com.gzaber.keepnote.ui.utils.components.KeepNoteModalBottomSheet
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 import com.gzaber.keepnote.ui.utils.model.toElement
 import kotlinx.coroutines.launch
@@ -90,7 +84,7 @@ fun FolderDetailsScreen(
         when (uiState.status) {
             FolderDetailsStatus.LOADING -> LoadingBox(paddingValues = paddingValues)
 
-            else -> ElementsOverviewContent(
+            else -> ElementsListGridContent(
                 elements = uiState.notes.map { it.toElement() },
                 onItemClick = { _, id -> onNoteClick(id) },
                 onItemLongClick = {
@@ -112,36 +106,32 @@ fun FolderDetailsScreen(
         }
 
         if (bottomSheetStatus != BottomSheetStatus.Hidden) {
-            ModalBottomSheet(
+            KeepNoteModalBottomSheet(
                 onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
                 sheetState = sheetState
             ) {
-                Box(
-                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp)
-                ) {
-                    when (bottomSheetStatus) {
-                        is BottomSheetStatus.EditDeleteNote -> {
-                            EditDeleteElementBottomSheetContent(
-                                editButtonOnClick = {
-                                    onUpdateNote(
-                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
-                                    )
-                                },
-                                deleteButtonOnClick = {
-                                    viewModel.deleteNote(
-                                        (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
-                                    )
-                                    hideBottomSheet()
-                                }
-                            )
-                        }
-
-                        BottomSheetStatus.FilterNotes -> {
-                            FilterBottomSheetContent()
-                        }
-
-                        BottomSheetStatus.Hidden -> {}
+                when (bottomSheetStatus) {
+                    is BottomSheetStatus.EditDeleteNote -> {
+                        EditDeleteElementBottomSheetContent(
+                            editButtonOnClick = {
+                                onUpdateNote(
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
+                                )
+                            },
+                            deleteButtonOnClick = {
+                                viewModel.deleteNote(
+                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
+                                )
+                                hideBottomSheet()
+                            }
+                        )
                     }
+
+                    BottomSheetStatus.FilterNotes -> {
+                        FilterBottomSheetContent()
+                    }
+
+                    BottomSheetStatus.Hidden -> {}
                 }
             }
         }

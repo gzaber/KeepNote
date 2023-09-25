@@ -1,17 +1,10 @@
 package com.gzaber.keepnote.ui.elementsoverview
 
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -31,10 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.utils.components.CreateElementBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.utils.components.ElementsOverviewContent
+import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
 import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
+import com.gzaber.keepnote.ui.utils.components.KeepNoteModalBottomSheet
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
 import com.gzaber.keepnote.ui.utils.model.Element
 import kotlinx.coroutines.launch
@@ -93,7 +87,7 @@ fun ElementsOverviewScreen(
         when (uiState.status) {
             ElementsOverviewStatus.LOADING -> LoadingBox(paddingValues = paddingValues)
 
-            else -> ElementsOverviewContent(
+            else -> ElementsListGridContent(
                 elements = uiState.elements,
                 isGridView = uiState.isGridView,
                 contentPadding = paddingValues,
@@ -117,51 +111,46 @@ fun ElementsOverviewScreen(
 
 
     if (bottomSheetStatus != BottomSheetStatus.Hidden) {
-        // TODO: extract composable
-        ModalBottomSheet(
+        KeepNoteModalBottomSheet(
             onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
             sheetState = sheetState
         ) {
-            Box(
-                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp)
-            ) {
-                when (bottomSheetStatus) {
-                    BottomSheetStatus.CreateElement -> {
-                        CreateElementBottomSheetContent(
-                            folderButtonOnClick = {
-                                onCreateElement(false)
-                                hideBottomSheet()
-                            },
-                            noteButtonOnClick = {
-                                onCreateElement(true)
-                                hideBottomSheet()
-                            }
-                        )
-                    }
-
-                    is BottomSheetStatus.EditDeleteElement -> {
-                        EditDeleteElementBottomSheetContent(
-                            editButtonOnClick = {
-                                onUpdateElement(
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id
-                                )
-                            },
-                            deleteButtonOnClick = {
-                                viewModel.deleteElement(
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
-                                )
-                                hideBottomSheet()
-                            }
-                        )
-                    }
-
-                    BottomSheetStatus.FilterElements -> {
-                        FilterBottomSheetContent()
-                    }
-
-                    BottomSheetStatus.Hidden -> {}
+            when (bottomSheetStatus) {
+                BottomSheetStatus.CreateElement -> {
+                    CreateElementBottomSheetContent(
+                        folderButtonOnClick = {
+                            onCreateElement(false)
+                            hideBottomSheet()
+                        },
+                        noteButtonOnClick = {
+                            onCreateElement(true)
+                            hideBottomSheet()
+                        }
+                    )
                 }
+
+                is BottomSheetStatus.EditDeleteElement -> {
+                    EditDeleteElementBottomSheetContent(
+                        editButtonOnClick = {
+                            onUpdateElement(
+                                (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.isNote,
+                                (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element.id
+                            )
+                        },
+                        deleteButtonOnClick = {
+                            viewModel.deleteElement(
+                                (bottomSheetStatus as BottomSheetStatus.EditDeleteElement).element
+                            )
+                            hideBottomSheet()
+                        }
+                    )
+                }
+
+                BottomSheetStatus.FilterElements -> {
+                    FilterBottomSheetContent()
+                }
+
+                BottomSheetStatus.Hidden -> {}
             }
         }
     }
