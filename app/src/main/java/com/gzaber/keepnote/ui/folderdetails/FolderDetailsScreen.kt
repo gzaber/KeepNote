@@ -128,7 +128,17 @@ fun FolderDetailsScreen(
                     }
 
                     BottomSheetStatus.FilterNotes -> {
-                        FilterBottomSheetContent()
+                        FilterBottomSheetContent(
+                            sortRadioOptions = listOf(R.string.radio_name, R.string.radio_date),
+                            sortSelectedOption = R.string.radio_name,
+                            onSortOptionSelected = {},
+                            orderRadioOptions = listOf(
+                                R.string.radio_ascending,
+                                R.string.radio_descending
+                            ),
+                            orderSelectedOption = R.string.radio_ascending,
+                            onOrderOptionSelected = {}
+                        )
                     }
 
                     BottomSheetStatus.Hidden -> {}

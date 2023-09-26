@@ -26,14 +26,14 @@
     <string name="folder_details">Folder details</string>
     <string name="share_note">Share note</string>
 
-    <string name="filter_by">Filter by</string>
+    <string name="sort_by">Sort by</string>
     <string name="radio_name">name</string>
     <string name="radio_date">date</string>
     <string name="order">Order</string>
-    <string name="radio_asc">ascending</string>
-    <string name="radio_desc">descending</string>
-    <string name="type_of_elements">Type of elements</string>
-    <string name="radio_folders_first">folders first</string>
-    <string name="radio_notes_first">notes first</string>
-    <string name="radio_none">none</string>
+    <string name="radio_ascending">ascending</string>
+    <string name="radio_descending">descending</string>
+    <string name="first_elements">First elements</string>
+    <string name="radio_folders">folders</string>
+    <string name="radio_notes">notes</string>
+    <string name="radio_not_applicable">n/a</string>
 </resources>

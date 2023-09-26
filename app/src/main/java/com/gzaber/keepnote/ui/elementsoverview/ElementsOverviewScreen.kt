@@ -147,7 +147,24 @@ fun ElementsOverviewScreen(
                 }
 
                 BottomSheetStatus.FilterElements -> {
-                    FilterBottomSheetContent()
+                    FilterBottomSheetContent(
+                        sortRadioOptions = listOf(R.string.radio_name, R.string.radio_date),
+                        sortSelectedOption = R.string.radio_name,
+                        onSortOptionSelected = {},
+                        orderRadioOptions = listOf(
+                            R.string.radio_ascending,
+                            R.string.radio_descending
+                        ),
+                        orderSelectedOption = R.string.radio_ascending,
+                        onOrderOptionSelected = {},
+                        firstElementsRadioOptions = listOf(
+                            R.string.radio_folders,
+                            R.string.radio_notes,
+                            R.string.radio_not_applicable
+                        ),
+                        firstElementsSelectedOption = R.string.radio_folders,
+                        onFirstElementsOptionSelected = {}
+                    )
                 }
 
                 BottomSheetStatus.Hidden -> {}

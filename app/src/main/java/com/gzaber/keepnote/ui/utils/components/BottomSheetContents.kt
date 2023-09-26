@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.utils.components
 
+import android.widget.RadioGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -10,11 +11,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -150,61 +156,70 @@ fun RadioRow(
 }
 
 @Composable
-fun FilterBottomSheetContent(
+fun BottomSheetRadioGroup(
+    @StringRes titleRes: Int,
+    radioOptions: List<Int>,
+    selectedOption: Int,
+    onOptionSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier
+        modifier = modifier.selectableGroup()
+    ) {
+        Text(
+            text = stringResource(titleRes),
+            fontWeight = FontWeight.Bold
+        )
+        radioOptions.forEach { textRes ->
+            RadioRow(
+                selected = (textRes == selectedOption),
+                onClick = { onOptionSelected(textRes) },
+                text = stringResource(id = textRes)
+            )
+        }
+    }
+}
+
+@Composable
+fun FilterBottomSheetContent(
+    modifier: Modifier = Modifier,
+    sortRadioOptions: List<Int>,
+    sortSelectedOption: Int,
+    onSortOptionSelected: (Int) -> Unit,
+    orderRadioOptions: List<Int>,
+    orderSelectedOption: Int,
+    onOrderOptionSelected: (Int) -> Unit,
+    firstElementsRadioOptions: List<Int>? = null,
+    firstElementsSelectedOption: Int? = null,
+    onFirstElementsOptionSelected: ((Int) -> Unit)? = null,
+) {
+    Column(
+        modifier = modifier
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.weight(1F)) {
-                Text(text = stringResource(id = R.string.filter_by), fontWeight = FontWeight.Bold)
-                RadioRow(
-                    selected = true,
-                    onClick = { /*TODO*/ },
-                    text = stringResource(id = R.string.radio_name)
-                )
-                RadioRow(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                    text = stringResource(id = R.string.radio_date)
-                )
-            }
-
-            Column(modifier = Modifier.weight(1F)) {
-                Text(text = stringResource(id = R.string.order), fontWeight = FontWeight.Bold)
-                RadioRow(
-                    selected = true,
-                    onClick = { /*TODO*/ },
-                    text = stringResource(id = R.string.radio_asc)
-                )
-                RadioRow(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                    text = stringResource(id = R.string.radio_desc)
-                )
-            }
+            BottomSheetRadioGroup(
+                modifier = Modifier.weight(1F),
+                titleRes = R.string.sort_by,
+                radioOptions = sortRadioOptions,
+                selectedOption = sortSelectedOption,
+                onOptionSelected = onSortOptionSelected
+            )
+            BottomSheetRadioGroup(
+                modifier = Modifier.weight(1F),
+                titleRes = R.string.order,
+                radioOptions = orderRadioOptions,
+                selectedOption = orderSelectedOption,
+                onOptionSelected = onOrderOptionSelected
+            )
         }
-
-        Column {
-            Text(
-                text = stringResource(id = R.string.type_of_elements),
-                fontWeight = FontWeight.Bold
-            )
-            RadioRow(
-                selected = true,
-                onClick = { /*TODO*/ },
-                text = stringResource(id = R.string.radio_folders_first)
-            )
-            RadioRow(
-                selected = false,
-                onClick = { /*TODO*/ },
-                text = stringResource(id = R.string.radio_notes_first)
-            )
-            RadioRow(
-                selected = false,
-                onClick = { /*TODO*/ },
-                text = stringResource(id = R.string.radio_none)
+        if (firstElementsRadioOptions != null && firstElementsSelectedOption != null &&
+            onFirstElementsOptionSelected != null
+        ) {
+            BottomSheetRadioGroup(
+                titleRes = R.string.first_elements,
+                radioOptions = firstElementsRadioOptions,
+                selectedOption = firstElementsSelectedOption,
+                onOptionSelected = onFirstElementsOptionSelected
             )
         }
     }
@@ -212,11 +227,64 @@ fun FilterBottomSheetContent(
 
 @Preview
 @Composable
-fun FilterBottomSheetContentPreview() {
+fun ThreeGroupsFilterBottomSheetContentPreview() {
     KeepNoteTheme {
-        FilterBottomSheetContent()
+        val sortRadioOptions =
+            listOf(R.string.radio_name, R.string.radio_date)
+        val (sortSelectedOption, onSortOptionSelected) = remember {
+            mutableStateOf(sortRadioOptions[0])
+        }
+        val orderRadioOptions =
+            listOf(R.string.radio_ascending, R.string.radio_descending)
+        val (orderSelectedOption, onOrderOptionSelected) = remember {
+            mutableStateOf(orderRadioOptions[0])
+        }
+        val firstElementsRadioOptions =
+            listOf(R.string.radio_folders, R.string.radio_notes, R.string.radio_not_applicable)
+        val (firstElementsSelectedOption, onFirstElementsOptionSelected) = remember {
+            mutableStateOf(firstElementsRadioOptions[0])
+        }
+
+        FilterBottomSheetContent(
+            sortRadioOptions = sortRadioOptions,
+            sortSelectedOption = sortSelectedOption,
+            onSortOptionSelected = onSortOptionSelected,
+            orderRadioOptions = orderRadioOptions,
+            orderSelectedOption = orderSelectedOption,
+            onOrderOptionSelected = onOrderOptionSelected,
+            firstElementsRadioOptions = firstElementsRadioOptions,
+            firstElementsSelectedOption = firstElementsSelectedOption,
+            onFirstElementsOptionSelected = onFirstElementsOptionSelected
+        )
     }
 }
+
+@Preview
+@Composable
+fun TwoGroupsFilterBottomSheetContentPreview() {
+    KeepNoteTheme {
+        val sortRadioOptions =
+            listOf(R.string.radio_name, R.string.radio_date)
+        val (sortSelectedOption, onSortOptionSelected) = remember {
+            mutableStateOf(sortRadioOptions[0])
+        }
+        val orderRadioOptions =
+            listOf(R.string.radio_ascending, R.string.radio_descending)
+        val (orderSelectedOption, onOrderOptionSelected) = remember {
+            mutableStateOf(orderRadioOptions[0])
+        }
+
+        FilterBottomSheetContent(
+            sortRadioOptions = sortRadioOptions,
+            sortSelectedOption = sortSelectedOption,
+            onSortOptionSelected = onSortOptionSelected,
+            orderRadioOptions = orderRadioOptions,
+            orderSelectedOption = orderSelectedOption,
+            onOrderOptionSelected = onOrderOptionSelected
+        )
+    }
+}
+
 
 
 
