@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
-import com.gzaber.keepnote.data.repository.model.Folder
-import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.utils.model.toElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,13 +17,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-
-sealed class ElementsFlowResult {
-    data class Success(val elements: List<Element>) : ElementsFlowResult()
-    object Error : ElementsFlowResult()
-    object Loading : ElementsFlowResult()
-}
 
 enum class ElementsOverviewStatus {
     LOADING, SUCCESS, FAILURE
@@ -60,50 +52,25 @@ class ElementsOverviewViewModel @Inject constructor(
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
 
-    private var _elementsResult = combine(
-        foldersRepository.getAllFoldersFlow(),
-        notesRepository.getFirstLevelNotesFlow()
-    )
-    { folders, notes ->
-        ElementsFlowResult.Success(elements = convertToElements(folders, notes))
-    }
-        .catch {
-            ElementsFlowResult.Error
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = ElementsFlowResult.Loading
-        )
-
     private val _uiState = combine(
-        _elementsResult,
+        foldersRepository.getAllFoldersFlow(),
+        notesRepository.getFirstLevelNotesFlow(),
         _isGridView,
         _filterInfo
-    ) { elementsResult, isGridView, filterInfo ->
-        when (elementsResult) {
-            is ElementsFlowResult.Success -> {
-                val sortedElements = sortElements(elementsResult.elements, filterInfo)
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = sortedElements,
-                    isGridView = isGridView,
-                    filterInfo = filterInfo
-                )
-            }
-
-            ElementsFlowResult.Error -> {
-                ElementsOverviewUiState(status = ElementsOverviewStatus.FAILURE)
-            }
-
-            ElementsFlowResult.Loading -> {
-                ElementsOverviewUiState(status = ElementsOverviewStatus.LOADING)
-            }
-        }
+    ) { folders, notes, isGridView, filterInfo ->
+        val elements = folders.map { it.toElement() } + notes.map { it.toElement() }
+        val sortedElements = sortElements(elements, filterInfo)
+        ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = sortedElements,
+            isGridView = isGridView,
+            filterInfo = filterInfo
+        )
     }
+        .catch { ElementsOverviewUiState(status = ElementsOverviewStatus.FAILURE) }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = ElementsOverviewUiState()
         )
 
@@ -111,17 +78,6 @@ class ElementsOverviewViewModel @Inject constructor(
 
     fun toggleView() {
         _isGridView.value = !_isGridView.value
-    }
-
-    fun deleteElement(element: Element) {
-        viewModelScope.launch {
-            if (element.isNote) {
-                notesRepository.deleteNote(element.id!!)
-            } else {
-                foldersRepository.deleteFolder(element.id!!)
-            }
-
-        }
     }
 
     fun onSortOptionSelected(optionSelected: Int) {
@@ -142,33 +98,16 @@ class ElementsOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun convertToElements(folders: List<Folder>, notes: List<Note>): List<Element> {
-        val elements = mutableListOf<Element>()
-        for (folder in folders) {
-            elements.add(
-                Element(
-                    id = folder.id,
-                    isNote = false,
-                    name = folder.name,
-                    content = "",
-                    color = folder.color,
-                    date = folder.date
-                )
-            )
+    // TODO: try catch
+    fun deleteElement(element: Element) {
+        viewModelScope.launch {
+            if (element.isNote) {
+                notesRepository.deleteNote(element.id!!)
+            } else {
+                foldersRepository.deleteFolder(element.id!!)
+            }
+
         }
-        for (note in notes) {
-            elements.add(
-                Element(
-                    id = note.id,
-                    isNote = true,
-                    name = note.title,
-                    content = note.content,
-                    color = note.color,
-                    date = note.date
-                )
-            )
-        }
-        return elements
     }
 
     private fun sortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {

@@ -80,8 +80,7 @@ class FolderDetailsViewModel @Inject constructor(
             FolderDetailsUiState(status = FolderDetailsStatus.FAILURE)
         )
     }
-
-
+    
     val uiState: StateFlow<FolderDetailsUiState> = _uiState
 
     fun toggleView() {
@@ -100,6 +99,7 @@ class FolderDetailsViewModel @Inject constructor(
         }
     }
 
+    // TODO: try catch 
     fun deleteNote(noteId: Int) {
         try {
             viewModelScope.launch {
