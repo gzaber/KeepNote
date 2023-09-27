@@ -23,11 +23,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
-import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
 import com.gzaber.keepnote.ui.utils.components.KeepNoteModalBottomSheet
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
+import com.gzaber.keepnote.ui.utils.components.SortBottomSheetContent
 import com.gzaber.keepnote.ui.utils.model.toElement
 import kotlinx.coroutines.launch
 
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 sealed class BottomSheetStatus {
     object Hidden : BottomSheetStatus()
     data class EditDeleteNote(val noteId: Int) : BottomSheetStatus()
-    object FilterNotes : BottomSheetStatus()
+    object SortNotes : BottomSheetStatus()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +68,7 @@ fun FolderDetailsScreen(
                 title = R.string.folder_details,
                 isGridView = uiState.isGridView,
                 onBackClick = onBackClick,
-                onFilterClick = { bottomSheetStatus = BottomSheetStatus.FilterNotes },
+                onFilterClick = { bottomSheetStatus = BottomSheetStatus.SortNotes },
                 onChangeViewClick = viewModel::toggleView
             )
         },
@@ -127,8 +127,15 @@ fun FolderDetailsScreen(
                         )
                     }
 
-                    BottomSheetStatus.FilterNotes -> {
-                        FilterBottomSheetContent()
+                    BottomSheetStatus.SortNotes -> {
+                        SortBottomSheetContent(
+                            sortRadioOptions = uiState.filterInfo.sortRadioOptions,
+                            sortSelectedOption = uiState.filterInfo.sortSelectedOption,
+                            onSortOptionSelected = viewModel::onSortOptionSelected,
+                            orderRadioOptions = uiState.filterInfo.orderRadioOptions,
+                            orderSelectedOption = uiState.filterInfo.orderSelectedOption,
+                            onOrderOptionSelected = viewModel::onOrderOptionSelected
+                        )
                     }
 
                     BottomSheetStatus.Hidden -> {}

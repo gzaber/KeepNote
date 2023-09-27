@@ -47,8 +47,8 @@ fun KeepNoteAppBar(
                     onClick = onFilterClick
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_filter),
-                        contentDescription = stringResource(id = R.string.filter)
+                        painter = painterResource(id = R.drawable.ic_sort),
+                        contentDescription = stringResource(id = R.string.sort)
                     )
                 }
             }
