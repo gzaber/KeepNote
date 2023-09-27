@@ -1,6 +1,5 @@
 package com.gzaber.keepnote.ui.utils.components
 
-import android.widget.RadioGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -181,7 +178,7 @@ fun BottomSheetRadioGroup(
 }
 
 @Composable
-fun FilterBottomSheetContent(
+fun SortBottomSheetContent(
     modifier: Modifier = Modifier,
     sortRadioOptions: List<Int>,
     sortSelectedOption: Int,
@@ -227,7 +224,7 @@ fun FilterBottomSheetContent(
 
 @Preview
 @Composable
-fun ThreeGroupsFilterBottomSheetContentPreview() {
+fun ThreeGroupsSortBottomSheetContentPreview() {
     KeepNoteTheme {
         val sortRadioOptions =
             listOf(R.string.radio_name, R.string.radio_date)
@@ -245,7 +242,7 @@ fun ThreeGroupsFilterBottomSheetContentPreview() {
             mutableStateOf(firstElementsRadioOptions[0])
         }
 
-        FilterBottomSheetContent(
+        SortBottomSheetContent(
             sortRadioOptions = sortRadioOptions,
             sortSelectedOption = sortSelectedOption,
             onSortOptionSelected = onSortOptionSelected,
@@ -261,7 +258,7 @@ fun ThreeGroupsFilterBottomSheetContentPreview() {
 
 @Preview
 @Composable
-fun TwoGroupsFilterBottomSheetContentPreview() {
+fun TwoGroupsSortBottomSheetContentPreview() {
     KeepNoteTheme {
         val sortRadioOptions =
             listOf(R.string.radio_name, R.string.radio_date)
@@ -274,7 +271,7 @@ fun TwoGroupsFilterBottomSheetContentPreview() {
             mutableStateOf(orderRadioOptions[0])
         }
 
-        FilterBottomSheetContent(
+        SortBottomSheetContent(
             sortRadioOptions = sortRadioOptions,
             sortSelectedOption = sortSelectedOption,
             onSortOptionSelected = onSortOptionSelected,

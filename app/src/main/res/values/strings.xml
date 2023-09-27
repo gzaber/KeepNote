@@ -3,7 +3,7 @@
 
     <string name="error_message">Something went wrong</string>
 
-    <string name="filter">Filter</string>
+    <string name="sort">Sort</string>
     <string name="grid_view">Grid view</string>
     <string name="list_view">List view</string>
     <string name="note">Note</string>

@@ -25,11 +25,11 @@ import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.utils.components.CreateElementBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
-import com.gzaber.keepnote.ui.utils.components.FilterBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
 import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
 import com.gzaber.keepnote.ui.utils.components.KeepNoteModalBottomSheet
 import com.gzaber.keepnote.ui.utils.components.LoadingBox
+import com.gzaber.keepnote.ui.utils.components.SortBottomSheetContent
 import com.gzaber.keepnote.ui.utils.model.Element
 import kotlinx.coroutines.launch
 
@@ -147,23 +147,16 @@ fun ElementsOverviewScreen(
                 }
 
                 BottomSheetStatus.FilterElements -> {
-                    FilterBottomSheetContent(
-                        sortRadioOptions = listOf(R.string.radio_name, R.string.radio_date),
-                        sortSelectedOption = R.string.radio_name,
-                        onSortOptionSelected = {},
-                        orderRadioOptions = listOf(
-                            R.string.radio_ascending,
-                            R.string.radio_descending
-                        ),
-                        orderSelectedOption = R.string.radio_ascending,
-                        onOrderOptionSelected = {},
-                        firstElementsRadioOptions = listOf(
-                            R.string.radio_folders,
-                            R.string.radio_notes,
-                            R.string.radio_not_applicable
-                        ),
-                        firstElementsSelectedOption = R.string.radio_folders,
-                        onFirstElementsOptionSelected = {}
+                    SortBottomSheetContent(
+                        sortRadioOptions = uiState.filterInfo.sortRadioOptions,
+                        sortSelectedOption = uiState.filterInfo.sortSelectedOption,
+                        onSortOptionSelected = viewModel::onSortOptionSelected,
+                        orderRadioOptions = uiState.filterInfo.orderRadioOptions,
+                        orderSelectedOption = uiState.filterInfo.orderSelectedOption,
+                        onOrderOptionSelected = viewModel::onOrderOptionSelected,
+                        firstElementsRadioOptions = uiState.filterInfo.firstElementsRadioOptions,
+                        firstElementsSelectedOption = uiState.filterInfo.firstElementsSelectedOption,
+                        onFirstElementsOptionSelected = viewModel::onFirstElementsOptionSelected
                     )
                 }
 

@@ -2,6 +2,7 @@ package com.gzaber.keepnote.ui.elementsoverview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gzaber.keepnote.R
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.data.repository.model.Folder
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,10 +30,25 @@ enum class ElementsOverviewStatus {
     LOADING, SUCCESS, FAILURE
 }
 
+data class FilterInfo(
+    val sortRadioOptions: List<Int> = listOf(R.string.radio_name, R.string.radio_date),
+    val sortSelectedOption: Int = sortRadioOptions.first(),
+    val orderRadioOptions: List<Int> = listOf(R.string.radio_ascending, R.string.radio_descending),
+    val orderSelectedOption: Int = orderRadioOptions.first(),
+    val firstElementsRadioOptions: List<Int> = listOf(
+        R.string.radio_not_applicable,
+        R.string.radio_folders,
+        R.string.radio_notes
+    ),
+    val firstElementsSelectedOption: Int = firstElementsRadioOptions.first(),
+
+    )
+
 data class ElementsOverviewUiState(
     val status: ElementsOverviewStatus = ElementsOverviewStatus.LOADING,
     val elements: List<Element> = listOf(),
-    val isGridView: Boolean = false
+    val isGridView: Boolean = false,
+    val filterInfo: FilterInfo = FilterInfo()
 )
 
 @HiltViewModel
@@ -41,6 +58,8 @@ class ElementsOverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
+
     private var _elementsResult = combine(
         foldersRepository.getAllFoldersFlow(),
         notesRepository.getFirstLevelNotesFlow()
@@ -57,13 +76,19 @@ class ElementsOverviewViewModel @Inject constructor(
             initialValue = ElementsFlowResult.Loading
         )
 
-    private val _uiState = combine(_elementsResult, _isGridView) { elementsResult, isGridView ->
+    private val _uiState = combine(
+        _elementsResult,
+        _isGridView,
+        _filterInfo
+    ) { elementsResult, isGridView, filterInfo ->
         when (elementsResult) {
             is ElementsFlowResult.Success -> {
+                val sortedElements = sortElements(elementsResult.elements, filterInfo)
                 ElementsOverviewUiState(
                     status = ElementsOverviewStatus.SUCCESS,
-                    elements = elementsResult.elements,
-                    isGridView = isGridView
+                    elements = sortedElements,
+                    isGridView = isGridView,
+                    filterInfo = filterInfo
                 )
             }
 
@@ -99,6 +124,24 @@ class ElementsOverviewViewModel @Inject constructor(
         }
     }
 
+    fun onSortOptionSelected(optionSelected: Int) {
+        _filterInfo.update {
+            it.copy(sortSelectedOption = optionSelected)
+        }
+    }
+
+    fun onOrderOptionSelected(optionSelected: Int) {
+        _filterInfo.update {
+            it.copy(orderSelectedOption = optionSelected)
+        }
+    }
+
+    fun onFirstElementsOptionSelected(optionSelected: Int) {
+        _filterInfo.update {
+            it.copy(firstElementsSelectedOption = optionSelected)
+        }
+    }
+
     private fun convertToElements(folders: List<Folder>, notes: List<Note>): List<Element> {
         val elements = mutableListOf<Element>()
         for (folder in folders) {
@@ -126,5 +169,44 @@ class ElementsOverviewViewModel @Inject constructor(
             )
         }
         return elements
+    }
+
+    private fun sortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {
+        return when (filterInfo.firstElementsSelectedOption) {
+
+            filterInfo.firstElementsRadioOptions.first() -> basicSortElements(elements, filterInfo)
+
+            else -> {
+                val folderElements = elements.filter { it.isNote.not() }
+                val noteElements = elements.filter { it.isNote }
+                if (filterInfo.firstElementsSelectedOption == filterInfo.firstElementsRadioOptions[1]) {
+                    basicSortElements(folderElements, filterInfo) +
+                            basicSortElements(noteElements, filterInfo)
+                } else {
+                    basicSortElements(noteElements, filterInfo) + basicSortElements(
+                        folderElements,
+                        filterInfo
+                    )
+                }
+            }
+        }
+    }
+
+    private fun basicSortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {
+        return when (filterInfo.orderSelectedOption) {
+            filterInfo.orderRadioOptions.first() -> {
+                when (filterInfo.sortSelectedOption) {
+                    filterInfo.sortRadioOptions.first() -> elements.sortedBy { it.name }
+                    else -> elements.sortedBy { it.date }
+                }
+            }
+
+            else -> {
+                when (filterInfo.sortSelectedOption) {
+                    filterInfo.sortRadioOptions.first() -> elements.sortedByDescending { it.name }
+                    else -> elements.sortedByDescending { it.date }
+                }
+            }
+        }
     }
 }
