@@ -40,6 +40,7 @@ data class ElementsOverviewUiState(
     val status: ElementsOverviewStatus = ElementsOverviewStatus.LOADING,
     val elements: List<Element> = listOf(),
     val isGridView: Boolean = false,
+    val isDeleteFailure: Boolean = false,
     val filterInfo: FilterInfo = FilterInfo()
 )
 
@@ -50,20 +51,23 @@ class ElementsOverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
 
     private val _uiState = combine(
         foldersRepository.getAllFoldersFlow(),
         notesRepository.getFirstLevelNotesFlow(),
         _isGridView,
+        _isDeleteFailure,
         _filterInfo
-    ) { folders, notes, isGridView, filterInfo ->
+    ) { folders, notes, isGridView, isDeleteFailure, filterInfo ->
         val elements = folders.map { it.toElement() } + notes.map { it.toElement() }
         val sortedElements = sortElements(elements, filterInfo)
         ElementsOverviewUiState(
             status = ElementsOverviewStatus.SUCCESS,
             elements = sortedElements,
             isGridView = isGridView,
+            isDeleteFailure = isDeleteFailure,
             filterInfo = filterInfo
         )
     }
@@ -98,16 +102,26 @@ class ElementsOverviewViewModel @Inject constructor(
         }
     }
 
-    // TODO: try catch
     fun deleteElement(element: Element) {
         viewModelScope.launch {
-            if (element.isNote) {
-                notesRepository.deleteNote(element.id!!)
-            } else {
-                foldersRepository.deleteFolder(element.id!!)
+            try {
+                if (element.id != null) {
+                    if (element.isNote) {
+                        notesRepository.deleteNote(element.id)
+                    } else {
+                        foldersRepository.deleteFolder(element.id)
+                    }
+                } else {
+                    throw (Exception())
+                }
+            } catch (e: Throwable) {
+                _isDeleteFailure.value = true
             }
-
         }
+    }
+
+    fun snackbarMessageShown() {
+        _isDeleteFailure.value = false
     }
 
     private fun sortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {

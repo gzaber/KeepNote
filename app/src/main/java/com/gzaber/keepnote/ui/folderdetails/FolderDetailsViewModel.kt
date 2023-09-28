@@ -38,6 +38,7 @@ data class FolderDetailsUiState(
     val folder: Folder = Element.empty().toFolder(),
     val notes: List<Note> = listOf(),
     val isGridView: Boolean = false,
+    val isDeleteFailure: Boolean = false,
     val filterInfo: FilterInfo = FilterInfo()
 )
 
@@ -50,6 +51,7 @@ class FolderDetailsViewModel @Inject constructor(
 
     private val folderId: String? = savedStateHandle[KeepNoteDestinationArgs.FOLDER_ID_ARG]
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
 
     private val _uiState = if (folderId != null) {
@@ -57,14 +59,16 @@ class FolderDetailsViewModel @Inject constructor(
             foldersRepository.getFolderByIdFlow(folderId = folderId.toInt()),
             notesRepository.getSecondLevelNotesFlow(folderId = folderId.toInt()),
             _isGridView,
+            _isDeleteFailure,
             _filterInfo
-        ) { folder, notes, isGridView, filterInfo ->
+        ) { folder, notes, isGridView, isDeleteFailure, filterInfo ->
             val sortedNotes = sortNotes(notes, filterInfo)
             FolderDetailsUiState(
                 status = FolderDetailsStatus.SUCCESS,
-                isGridView = isGridView,
                 folder = folder,
                 notes = sortedNotes,
+                isGridView = isGridView,
+                isDeleteFailure = isDeleteFailure,
                 filterInfo = filterInfo
             )
         }.catch {
@@ -80,7 +84,7 @@ class FolderDetailsViewModel @Inject constructor(
             FolderDetailsUiState(status = FolderDetailsStatus.FAILURE)
         )
     }
-    
+
     val uiState: StateFlow<FolderDetailsUiState> = _uiState
 
     fun toggleView() {
@@ -99,15 +103,18 @@ class FolderDetailsViewModel @Inject constructor(
         }
     }
 
-    // TODO: try catch 
     fun deleteNote(noteId: Int) {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 notesRepository.deleteNote(noteId)
+            } catch (e: Throwable) {
+                _isDeleteFailure.value = true
             }
-        } catch (e: Throwable) {
-
         }
+    }
+
+    fun snackbarMessageShown() {
+        _isDeleteFailure.value = false
     }
 
     private fun sortNotes(notes: List<Note>, filterInfo: FilterInfo): List<Note> {
