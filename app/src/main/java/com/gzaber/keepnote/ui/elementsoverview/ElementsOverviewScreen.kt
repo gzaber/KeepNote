@@ -68,6 +68,7 @@ fun ElementsOverviewScreen(
         topBar = {
             KeepNoteAppBar(
                 title = R.string.app_name,
+                isTitleBold = true,
                 isGridView = uiState.isGridView,
                 onFilterClick = {
                     bottomSheetStatus = BottomSheetStatus.FilterElements
@@ -102,10 +103,11 @@ fun ElementsOverviewScreen(
         }
     }
 
-    if (uiState.status == ElementsOverviewStatus.FAILURE) {
+    if (uiState.status == ElementsOverviewStatus.FAILURE || uiState.isDeleteFailure) {
         val errorMessage = stringResource(id = R.string.error_message)
-        LaunchedEffect(uiState.status) {
+        LaunchedEffect(errorMessage) {
             snackbarHostState.showSnackbar(errorMessage)
+            viewModel.snackbarMessageShown()
         }
     }
 

@@ -98,10 +98,11 @@ fun FolderDetailsScreen(
             )
         }
 
-        if (uiState.status == FolderDetailsStatus.FAILURE) {
+        if (uiState.status == FolderDetailsStatus.FAILURE || uiState.isDeleteFailure) {
             val errorMessage = stringResource(id = R.string.error_message)
-            LaunchedEffect(uiState.status) {
+            LaunchedEffect(errorMessage) {
                 snackbarHostState.showSnackbar(errorMessage)
+                viewModel.snackbarMessageShown()
             }
         }
 

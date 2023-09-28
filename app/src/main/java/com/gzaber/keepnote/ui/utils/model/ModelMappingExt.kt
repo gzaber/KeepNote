@@ -2,7 +2,6 @@ package com.gzaber.keepnote.ui.utils.model
 
 import com.gzaber.keepnote.data.repository.model.Folder
 import com.gzaber.keepnote.data.repository.model.Note
-import com.gzaber.keepnote.ui.utils.model.Element
 
 
 fun Element.toNote(): Note {

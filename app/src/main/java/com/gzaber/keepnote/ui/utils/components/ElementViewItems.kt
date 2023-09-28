@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.R
+import com.gzaber.keepnote.ui.theme.CardContainerColor
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 import com.gzaber.keepnote.ui.utils.model.Element
 
@@ -74,13 +77,21 @@ fun ElementText(
     Column(modifier = modifier) {
         Text(
             text = element.name,
-            fontWeight = FontWeight.Bold
-        )
-        if (element.isNote) Text(
-            text = element.content,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             overflow = TextOverflow.Ellipsis,
-            maxLines = 3
+            maxLines = 2
         )
+        if (element.isNote && element.content.isNotEmpty())
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = element.content,
+                    style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 3
+                )
+            }
+
     }
 }
 
@@ -94,6 +105,7 @@ fun ElementItem(
     isGridItem: Boolean = false
 ) {
     Card(
+        colors = CardDefaults.cardColors(containerColor = CardContainerColor),
         modifier = modifier
             .combinedClickable(
                 onClick = { onClick(element.isNote, element.id!!) },
@@ -142,8 +154,8 @@ fun NoteElementGridItemPreview() {
             isGridItem = true,
             element = Element(
                 isNote = true,
-                name = "eget mauris pharetra et ultrices neque ornare aenean",
-                content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                name = "Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                 color = Color.Red.toArgb()
             )
         )
@@ -159,7 +171,7 @@ fun FolderElementGridItemPreview() {
             isGridItem = true,
             element = Element(
                 isNote = false,
-                name = "eget mauris pharetra et ultrices neque ornare aenean",
+                name = "Eget mauris pharetra et ultrices neque ornare aenean",
                 content = "",
                 color = Color.Red.toArgb()
             )
@@ -175,8 +187,8 @@ fun NoteElementListItemPreview() {
             isGridItem = false,
             element = Element(
                 isNote = true,
-                name = "eget mauris pharetra et ultrices neque ornare aenean",
-                content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                name = "Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                 color = Color.Red.toArgb()
             )
         )
@@ -191,7 +203,7 @@ fun FolderElementListItemPreview() {
             isGridItem = false,
             element = Element(
                 isNote = false,
-                name = "eget mauris pharetra et ultrices neque ornare aenean",
+                name = "Eget mauris pharetra et ultrices neque ornare aenean",
                 content = "",
                 color = Color.Red.toArgb()
             )

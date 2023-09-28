@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.utils.components
 
+import android.content.res.Resources.Theme
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -8,11 +9,14 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
@@ -23,14 +27,22 @@ fun KeepNoteAppBar(
     @StringRes title: Int,
     modifier: Modifier = Modifier,
     isGridView: Boolean = false,
+    isTitleBold: Boolean = false,
     onBackClick: (() -> Unit)? = null,
     onFilterClick: (() -> Unit)? = null,
     onChangeViewClick: (() -> Unit)? = null,
     onSaveClick: (() -> Unit)? = null,
     onShareClick: (() -> Unit)? = null
 ) {
-    CenterAlignedTopAppBar(
-        title = { Text(text = stringResource(id = title)) },
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(id = title),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = if (isTitleBold) FontWeight.Bold else FontWeight.Normal
+                )
+            )
+        },
         navigationIcon = {
             if (onBackClick != null) {
                 IconButton(onClick = onBackClick) {
@@ -94,6 +106,7 @@ fun ElementsOverviewAppBarPreview() {
     KeepNoteTheme {
         KeepNoteAppBar(
             title = R.string.app_name,
+            isTitleBold = true,
             onFilterClick = {},
             onChangeViewClick = {},
         )

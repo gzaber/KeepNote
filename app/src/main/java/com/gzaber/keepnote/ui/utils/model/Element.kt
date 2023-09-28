@@ -2,6 +2,7 @@ package com.gzaber.keepnote.ui.utils.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor1
 import java.util.Date
 
 data class Element(
@@ -19,7 +20,7 @@ data class Element(
                 isNote = true,
                 name = "",
                 content = "",
-                color = Color.Red.toArgb()
+                color = ColorSelectorColor1.toArgb()
             )
         }
     }
