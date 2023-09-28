@@ -68,6 +68,7 @@ fun ElementsOverviewScreen(
         topBar = {
             KeepNoteAppBar(
                 title = R.string.app_name,
+                isTitleBold = true,
                 isGridView = uiState.isGridView,
                 onFilterClick = {
                     bottomSheetStatus = BottomSheetStatus.FilterElements

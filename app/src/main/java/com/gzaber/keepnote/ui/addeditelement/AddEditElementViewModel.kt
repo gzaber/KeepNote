@@ -57,8 +57,6 @@ class AddEditElementViewModel @Inject constructor(
     val uiState: StateFlow<AddEditElementUiState> = _uiState.asStateFlow()
 
     init {
-        Log.e("logix", "saveElement: $isNote, $elementId, $folderId", )
-
         if (elementId != null) {
             readElement(elementId.toInt(), isNote)
         }

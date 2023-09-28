@@ -25,6 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.R
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor1
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor2
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor3
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor4
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor5
+import com.gzaber.keepnote.ui.theme.ColorSelectorColor6
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
 
@@ -55,12 +61,27 @@ fun ColorCircle(
 }
 
 @Composable
-fun ColorPicker(
+fun ColorSelector(
     onColorSelect: (Color) -> Unit,
     modifier: Modifier = Modifier,
+//    colors: List<Color> = listOf(
+//        ColorSelectorColor1,
+//        ColorSelectorColor2,
+//        ColorSelectorColor3,
+//        ColorSelectorColor4,
+//        ColorSelectorColor5,
+//        ColorSelectorColor6
+//    ),
     currentColor: Color? = null
 ) {
-    val colors = listOf(Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Gray)
+    val colors: List<Color> = listOf(
+        ColorSelectorColor1,
+        ColorSelectorColor2,
+        ColorSelectorColor3,
+        ColorSelectorColor4,
+        ColorSelectorColor5,
+        ColorSelectorColor6
+    )
     var selectedColor by remember {
         mutableStateOf(currentColor ?: colors.first())
     }
@@ -88,7 +109,7 @@ fun ColorPicker(
 @Composable
 fun ColorPickerPreview() {
     KeepNoteTheme {
-        ColorPicker(
+        ColorSelector(
             onColorSelect = {}
         )
     }

@@ -23,7 +23,7 @@ enum class ElementsOverviewStatus {
 }
 
 data class FilterInfo(
-    val sortRadioOptions: List<Int> = listOf(R.string.radio_name, R.string.radio_date),
+    val sortRadioOptions: List<Int> = listOf(R.string.radio_date, R.string.radio_name),
     val sortSelectedOption: Int = sortRadioOptions.first(),
     val orderRadioOptions: List<Int> = listOf(R.string.radio_ascending, R.string.radio_descending),
     val orderSelectedOption: Int = orderRadioOptions.first(),

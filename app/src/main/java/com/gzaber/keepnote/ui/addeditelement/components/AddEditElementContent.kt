@@ -49,7 +49,7 @@ fun AddEditElementContent(
                     .fillMaxWidth()
             )
         }
-        ColorPicker(
+        ColorSelector(
             onColorSelect = onColorSelect,
             currentColor = color,
         )

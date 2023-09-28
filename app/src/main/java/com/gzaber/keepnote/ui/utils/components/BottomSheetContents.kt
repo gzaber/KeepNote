@@ -227,19 +227,19 @@ fun SortBottomSheetContent(
 fun ThreeGroupsSortBottomSheetContentPreview() {
     KeepNoteTheme {
         val sortRadioOptions =
-            listOf(R.string.radio_name, R.string.radio_date)
+            listOf(R.string.radio_date, R.string.radio_name)
         val (sortSelectedOption, onSortOptionSelected) = remember {
-            mutableStateOf(sortRadioOptions[0])
+            mutableStateOf(sortRadioOptions.first())
         }
         val orderRadioOptions =
             listOf(R.string.radio_ascending, R.string.radio_descending)
         val (orderSelectedOption, onOrderOptionSelected) = remember {
-            mutableStateOf(orderRadioOptions[0])
+            mutableStateOf(orderRadioOptions.first())
         }
         val firstElementsRadioOptions =
             listOf(R.string.radio_folders, R.string.radio_notes, R.string.radio_not_applicable)
         val (firstElementsSelectedOption, onFirstElementsOptionSelected) = remember {
-            mutableStateOf(firstElementsRadioOptions[0])
+            mutableStateOf(firstElementsRadioOptions.first())
         }
 
         SortBottomSheetContent(
@@ -261,14 +261,14 @@ fun ThreeGroupsSortBottomSheetContentPreview() {
 fun TwoGroupsSortBottomSheetContentPreview() {
     KeepNoteTheme {
         val sortRadioOptions =
-            listOf(R.string.radio_name, R.string.radio_date)
+            listOf(R.string.radio_date, R.string.radio_name)
         val (sortSelectedOption, onSortOptionSelected) = remember {
-            mutableStateOf(sortRadioOptions[0])
+            mutableStateOf(sortRadioOptions.first())
         }
         val orderRadioOptions =
             listOf(R.string.radio_ascending, R.string.radio_descending)
         val (orderSelectedOption, onOrderOptionSelected) = remember {
-            mutableStateOf(orderRadioOptions[0])
+            mutableStateOf(orderRadioOptions.first())
         }
 
         SortBottomSheetContent(
