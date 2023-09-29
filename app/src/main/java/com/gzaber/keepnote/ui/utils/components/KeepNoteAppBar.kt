@@ -1,11 +1,9 @@
 package com.gzaber.keepnote.ui.utils.components
 
-import android.content.res.Resources.Theme
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +35,7 @@ fun KeepNoteAppBar(
     TopAppBar(
         title = {
             Text(
-                text = stringResource(id = title),
+                text = stringResource(title),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = if (isTitleBold) FontWeight.Bold else FontWeight.Normal
                 )

@@ -2,6 +2,8 @@ package com.gzaber.keepnote.ui.notedetails.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
+import com.gzaber.keepnote.ui.utils.components.DetailsHeader
 
 @Composable
 fun NoteDetailsContent(
@@ -26,15 +29,14 @@ fun NoteDetailsContent(
         modifier = modifier
             .padding(contentPadding)
     ) {
-        Divider(
-            thickness = 4.dp,
+        DetailsHeader(
+            title = note.title,
             color = Color(note.color)
         )
         Text(
-            text = note.title,
-            style = MaterialTheme.typography.headlineSmall
+            text = note.content,
+            style = MaterialTheme.typography.bodyLarge
         )
-        Text(text = note.content)
     }
 }
 

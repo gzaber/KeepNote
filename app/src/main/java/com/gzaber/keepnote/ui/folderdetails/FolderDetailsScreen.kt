@@ -1,12 +1,20 @@
 package com.gzaber.keepnote.ui.folderdetails
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
+import com.gzaber.keepnote.ui.utils.components.DetailsHeader
 import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
 import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
 import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
@@ -95,54 +105,60 @@ fun FolderDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
-            )
-        }
-
-        if (uiState.status == FolderDetailsStatus.FAILURE || uiState.isDeleteFailure) {
-            val errorMessage = stringResource(id = R.string.error_message)
-            LaunchedEffect(errorMessage) {
-                snackbarHostState.showSnackbar(errorMessage)
-                viewModel.snackbarMessageShown()
+            ) {
+                DetailsHeader(
+                    title = uiState.folder.name,
+                    color = Color(uiState.folder.color)
+                )
             }
         }
+    }
 
-        if (bottomSheetStatus != BottomSheetStatus.Hidden) {
-            KeepNoteModalBottomSheet(
-                onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
-                sheetState = sheetState
-            ) {
-                when (bottomSheetStatus) {
-                    is BottomSheetStatus.EditDeleteNote -> {
-                        EditDeleteElementBottomSheetContent(
-                            editButtonOnClick = {
-                                onUpdateNote(
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
-                                )
-                            },
-                            deleteButtonOnClick = {
-                                viewModel.deleteNote(
-                                    (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
-                                )
-                                hideBottomSheet()
-                            }
-                        )
-                    }
+    if (uiState.status == FolderDetailsStatus.FAILURE || uiState.isDeleteFailure) {
+        val errorMessage = stringResource(id = R.string.error_message)
+        LaunchedEffect(errorMessage) {
+            snackbarHostState.showSnackbar(errorMessage)
+            viewModel.snackbarMessageShown()
+        }
+    }
 
-                    BottomSheetStatus.SortNotes -> {
-                        SortBottomSheetContent(
-                            sortRadioOptions = uiState.filterInfo.sortRadioOptions,
-                            sortSelectedOption = uiState.filterInfo.sortSelectedOption,
-                            onSortOptionSelected = viewModel::onSortOptionSelected,
-                            orderRadioOptions = uiState.filterInfo.orderRadioOptions,
-                            orderSelectedOption = uiState.filterInfo.orderSelectedOption,
-                            onOrderOptionSelected = viewModel::onOrderOptionSelected
-                        )
-                    }
-
-                    BottomSheetStatus.Hidden -> {}
+    if (bottomSheetStatus != BottomSheetStatus.Hidden) {
+        KeepNoteModalBottomSheet(
+            onDismissRequest = { bottomSheetStatus = BottomSheetStatus.Hidden },
+            sheetState = sheetState
+        ) {
+            when (bottomSheetStatus) {
+                is BottomSheetStatus.EditDeleteNote -> {
+                    EditDeleteElementBottomSheetContent(
+                        editButtonOnClick = {
+                            onUpdateNote(
+                                (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
+                            )
+                        },
+                        deleteButtonOnClick = {
+                            viewModel.deleteNote(
+                                (bottomSheetStatus as BottomSheetStatus.EditDeleteNote).noteId
+                            )
+                            hideBottomSheet()
+                        }
+                    )
                 }
+
+                BottomSheetStatus.SortNotes -> {
+                    SortBottomSheetContent(
+                        sortRadioOptions = uiState.filterInfo.sortRadioOptions,
+                        sortSelectedOption = uiState.filterInfo.sortSelectedOption,
+                        onSortOptionSelected = viewModel::onSortOptionSelected,
+                        orderRadioOptions = uiState.filterInfo.orderRadioOptions,
+                        orderSelectedOption = uiState.filterInfo.orderSelectedOption,
+                        onOrderOptionSelected = viewModel::onOrderOptionSelected
+                    )
+                }
+
+                else -> {}
             }
         }
     }
 }
+
 

@@ -30,6 +30,7 @@ fun ElementsListGridContent(
     onItemLongClick: (Element) -> Unit = {},
     horizontalSpace: Dp = 8.dp,
     verticalSpace: Dp = 8.dp,
+    header: @Composable (() -> Unit) = {},
 ) {
     if (isGridView) {
         LazyVerticalStaggeredGrid(
@@ -39,6 +40,9 @@ fun ElementsListGridContent(
             horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
             modifier = modifier
         ) {
+            item {
+                header()
+            }
             items(elements) { element ->
                 ElementItem(
                     isGridItem = true,
@@ -48,13 +52,15 @@ fun ElementsListGridContent(
                 )
             }
         }
-
     } else {
         LazyColumn(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(verticalSpace),
             modifier = modifier
         ) {
+            item {
+                header()
+            }
             items(elements) { element ->
                 ElementItem(
                     element = element,
@@ -137,5 +143,59 @@ fun ElementsGridContentPreview() {
                 )
             )
         )
+    }
+}
+
+@Preview
+@Composable
+fun FolderDetailsListContentPreview() {
+    KeepNoteTheme {
+        ElementsListGridContent(
+            isGridView = false,
+            contentPadding = PaddingValues(8.dp),
+            elements = listOf(
+                Element(
+                    isNote = true,
+                    name = "eget mauris pharetra et ultrices neque ornare aenean",
+                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    color = Color.Red.toArgb()
+                ),
+                Element(
+                    isNote = true,
+                    name = "Note title",
+                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    color = Color.Blue.toArgb()
+                )
+            )
+        ) {
+            DetailsHeader(title = "Folder details", color = Color.Green)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun FolderDetailsGridContentPreview() {
+    KeepNoteTheme {
+        ElementsListGridContent(
+            isGridView = true,
+            contentPadding = PaddingValues(8.dp),
+            elements = listOf(
+                Element(
+                    isNote = true,
+                    name = "eget mauris pharetra et ultrices neque ornare aenean",
+                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    color = Color.Red.toArgb()
+                ),
+                Element(
+                    isNote = true,
+                    name = "Note title",
+                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    color = Color.Blue.toArgb()
+                )
+            )
+        ) {
+            DetailsHeader(title = "Folder details", color = Color.Green)
+        }
     }
 }
