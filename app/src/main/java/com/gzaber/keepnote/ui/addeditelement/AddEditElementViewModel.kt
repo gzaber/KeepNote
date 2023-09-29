@@ -1,6 +1,5 @@
 package com.gzaber.keepnote.ui.addeditelement
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -17,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -105,9 +103,8 @@ class AddEditElementViewModel @Inject constructor(
         _uiState.update {
             it.copy(status = AddEditElementStatus.LOADING)
         }
-
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 when (_uiState.value.mode) {
                     AddEditElementMode.CREATE_CHILD_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
                     AddEditElementMode.CREATE_NOTE -> notesRepository.createNote(_uiState.value.element.toNote())
@@ -118,10 +115,10 @@ class AddEditElementViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(status = AddEditElementStatus.SAVE_SUCCESS)
                 }
-            }
-        } catch (e: Throwable) {
-            _uiState.update {
-                it.copy(status = AddEditElementStatus.FAILURE)
+            } catch (e: Throwable) {
+                _uiState.update {
+                    it.copy(status = AddEditElementStatus.FAILURE)
+                }
             }
         }
     }
@@ -130,15 +127,10 @@ class AddEditElementViewModel @Inject constructor(
         _uiState.update {
             it.copy(status = AddEditElementStatus.LOADING)
         }
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 if (isNote) {
                     notesRepository.getNoteByIdFlow(elementId)
-                        .catch {
-                            _uiState.update {
-                                it.copy(status = AddEditElementStatus.FAILURE)
-                            }
-                        }
                         .first().let { note ->
                             _uiState.update {
                                 it.copy(
@@ -149,11 +141,6 @@ class AddEditElementViewModel @Inject constructor(
                         }
                 } else {
                     foldersRepository.getFolderByIdFlow(elementId)
-                        .catch {
-                            _uiState.update {
-                                it.copy(status = AddEditElementStatus.FAILURE)
-                            }
-                        }
                         .first().let { folder ->
                             _uiState.update {
                                 it.copy(
@@ -163,10 +150,10 @@ class AddEditElementViewModel @Inject constructor(
                             }
                         }
                 }
-            }
-        } catch (e: Throwable) {
-            _uiState.update {
-                it.copy(status = AddEditElementStatus.FAILURE)
+            } catch (e: Throwable) {
+                _uiState.update {
+                    it.copy(status = AddEditElementStatus.FAILURE)
+                }
             }
         }
     }

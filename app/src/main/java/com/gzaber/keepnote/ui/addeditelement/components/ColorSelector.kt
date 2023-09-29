@@ -64,24 +64,16 @@ fun ColorCircle(
 fun ColorSelector(
     onColorSelect: (Color) -> Unit,
     modifier: Modifier = Modifier,
-//    colors: List<Color> = listOf(
-//        ColorSelectorColor1,
-//        ColorSelectorColor2,
-//        ColorSelectorColor3,
-//        ColorSelectorColor4,
-//        ColorSelectorColor5,
-//        ColorSelectorColor6
-//    ),
-    currentColor: Color? = null
-) {
-    val colors: List<Color> = listOf(
+    colors: List<Color> = listOf(
         ColorSelectorColor1,
         ColorSelectorColor2,
         ColorSelectorColor3,
         ColorSelectorColor4,
         ColorSelectorColor5,
         ColorSelectorColor6
-    )
+    ),
+    currentColor: Color? = null
+) {
     var selectedColor by remember {
         mutableStateOf(currentColor ?: colors.first())
     }
