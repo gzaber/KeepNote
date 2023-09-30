@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -30,7 +31,9 @@ fun AddEditElementContent(
     color: Color? = null
 ) {
     Column(
-        modifier = modifier.padding(contentPadding)
+        modifier = modifier
+            .padding(contentPadding)
+            .imePadding()
     ) {
         OutlinedTextField(
             value = title,
@@ -51,7 +54,7 @@ fun AddEditElementContent(
         }
         ColorSelector(
             onColorSelect = onColorSelect,
-            currentColor = color,
+            currentColor = color
         )
     }
 }
