@@ -35,16 +35,6 @@ object KeepNoteDestinations {
 
 class KeepNoteNavigationActions(private val navController: NavController) {
 
-    fun navigateToElementsOverview() {
-        navController.navigate(KeepNoteDestinations.ELEMENTS_OVERVIEW_ROUTE) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-
     fun navigateToAddEditElement(isNote: Boolean, elementId: String?, folderId: String?) {
         navController.navigate(
             "$ADD_EDIT_ELEMENT_SCREEN/$isNote?$ELEMENT_ID_ARG=$elementId?$FOLDER_ID_ARG=$folderId"

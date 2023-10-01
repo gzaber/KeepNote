@@ -22,7 +22,7 @@ enum class ElementsOverviewStatus {
     LOADING, SUCCESS, FAILURE
 }
 
-data class FilterInfo(
+data class SortInfo(
     val sortRadioOptions: List<Int> = listOf(R.string.radio_date, R.string.radio_name),
     val sortSelectedOption: Int = sortRadioOptions.first(),
     val orderRadioOptions: List<Int> = listOf(R.string.radio_ascending, R.string.radio_descending),
@@ -41,7 +41,7 @@ data class ElementsOverviewUiState(
     val elements: List<Element> = listOf(),
     val isGridView: Boolean = false,
     val isDeleteFailure: Boolean = false,
-    val filterInfo: FilterInfo = FilterInfo()
+    val sortInfo: SortInfo = SortInfo()
 )
 
 @HiltViewModel
@@ -52,23 +52,23 @@ class ElementsOverviewViewModel @Inject constructor(
 
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
+    private val _sortInfo: MutableStateFlow<SortInfo> = MutableStateFlow(SortInfo())
 
     private val _uiState = combine(
         foldersRepository.getAllFoldersFlow(),
         notesRepository.getFirstLevelNotesFlow(),
         _isGridView,
         _isDeleteFailure,
-        _filterInfo
-    ) { folders, notes, isGridView, isDeleteFailure, filterInfo ->
+        _sortInfo
+    ) { folders, notes, isGridView, isDeleteFailure, sortInfo ->
         val elements = folders.map { it.toElement() } + notes.map { it.toElement() }
-        val sortedElements = sortElements(elements, filterInfo)
+        val sortedElements = sortElements(elements, sortInfo)
         ElementsOverviewUiState(
             status = ElementsOverviewStatus.SUCCESS,
             elements = sortedElements,
             isGridView = isGridView,
             isDeleteFailure = isDeleteFailure,
-            filterInfo = filterInfo
+            sortInfo = sortInfo
         )
     }
         .catch { ElementsOverviewUiState(status = ElementsOverviewStatus.FAILURE) }
@@ -85,19 +85,19 @@ class ElementsOverviewViewModel @Inject constructor(
     }
 
     fun onSortOptionSelected(optionSelected: Int) {
-        _filterInfo.update {
+        _sortInfo.update {
             it.copy(sortSelectedOption = optionSelected)
         }
     }
 
     fun onOrderOptionSelected(optionSelected: Int) {
-        _filterInfo.update {
+        _sortInfo.update {
             it.copy(orderSelectedOption = optionSelected)
         }
     }
 
     fun onFirstElementsOptionSelected(optionSelected: Int) {
-        _filterInfo.update {
+        _sortInfo.update {
             it.copy(firstElementsSelectedOption = optionSelected)
         }
     }
@@ -124,39 +124,39 @@ class ElementsOverviewViewModel @Inject constructor(
         _isDeleteFailure.value = false
     }
 
-    private fun sortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {
-        return when (filterInfo.firstElementsSelectedOption) {
+    private fun sortElements(elements: List<Element>, sortInfo: SortInfo): List<Element> {
+        return when (sortInfo.firstElementsSelectedOption) {
 
-            filterInfo.firstElementsRadioOptions.first() -> basicSortElements(elements, filterInfo)
+            sortInfo.firstElementsRadioOptions.first() -> basicSortElements(elements, sortInfo)
 
             else -> {
                 val folderElements = elements.filter { it.isNote.not() }
                 val noteElements = elements.filter { it.isNote }
-                if (filterInfo.firstElementsSelectedOption == filterInfo.firstElementsRadioOptions[1]) {
-                    basicSortElements(folderElements, filterInfo) +
-                            basicSortElements(noteElements, filterInfo)
+                if (sortInfo.firstElementsSelectedOption == sortInfo.firstElementsRadioOptions[1]) {
+                    basicSortElements(folderElements, sortInfo) +
+                            basicSortElements(noteElements, sortInfo)
                 } else {
-                    basicSortElements(noteElements, filterInfo) + basicSortElements(
+                    basicSortElements(noteElements, sortInfo) + basicSortElements(
                         folderElements,
-                        filterInfo
+                        sortInfo
                     )
                 }
             }
         }
     }
 
-    private fun basicSortElements(elements: List<Element>, filterInfo: FilterInfo): List<Element> {
-        return when (filterInfo.orderSelectedOption) {
-            filterInfo.orderRadioOptions.first() -> {
-                when (filterInfo.sortSelectedOption) {
-                    filterInfo.sortRadioOptions.first() -> elements.sortedBy { it.name }
+    private fun basicSortElements(elements: List<Element>, sortInfo: SortInfo): List<Element> {
+        return when (sortInfo.orderSelectedOption) {
+            sortInfo.orderRadioOptions.first() -> {
+                when (sortInfo.sortSelectedOption) {
+                    sortInfo.sortRadioOptions.first() -> elements.sortedBy { it.name }
                     else -> elements.sortedBy { it.date }
                 }
             }
 
             else -> {
-                when (filterInfo.sortSelectedOption) {
-                    filterInfo.sortRadioOptions.first() -> elements.sortedByDescending { it.name }
+                when (sortInfo.sortSelectedOption) {
+                    sortInfo.sortRadioOptions.first() -> elements.sortedByDescending { it.name }
                     else -> elements.sortedByDescending { it.date }
                 }
             }

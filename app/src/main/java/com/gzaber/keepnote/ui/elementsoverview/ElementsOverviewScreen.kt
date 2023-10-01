@@ -38,7 +38,7 @@ sealed class BottomSheetStatus {
     object Hidden : BottomSheetStatus()
     object CreateElement : BottomSheetStatus()
     data class EditDeleteElement(val element: Element) : BottomSheetStatus()
-    object FilterElements : BottomSheetStatus()
+    object SortElements : BottomSheetStatus()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +71,7 @@ fun ElementsOverviewScreen(
                 isTitleBold = true,
                 isGridView = uiState.isGridView,
                 onFilterClick = {
-                    bottomSheetStatus = BottomSheetStatus.FilterElements
+                    bottomSheetStatus = BottomSheetStatus.SortElements
                 },
                 onChangeViewClick = viewModel::toggleView,
             )
@@ -148,21 +148,21 @@ fun ElementsOverviewScreen(
                     )
                 }
 
-                BottomSheetStatus.FilterElements -> {
+                BottomSheetStatus.SortElements -> {
                     SortBottomSheetContent(
-                        sortRadioOptions = uiState.filterInfo.sortRadioOptions,
-                        sortSelectedOption = uiState.filterInfo.sortSelectedOption,
+                        sortRadioOptions = uiState.sortInfo.sortRadioOptions,
+                        sortSelectedOption = uiState.sortInfo.sortSelectedOption,
                         onSortOptionSelected = viewModel::onSortOptionSelected,
-                        orderRadioOptions = uiState.filterInfo.orderRadioOptions,
-                        orderSelectedOption = uiState.filterInfo.orderSelectedOption,
+                        orderRadioOptions = uiState.sortInfo.orderRadioOptions,
+                        orderSelectedOption = uiState.sortInfo.orderSelectedOption,
                         onOrderOptionSelected = viewModel::onOrderOptionSelected,
-                        firstElementsRadioOptions = uiState.filterInfo.firstElementsRadioOptions,
-                        firstElementsSelectedOption = uiState.filterInfo.firstElementsSelectedOption,
+                        firstElementsRadioOptions = uiState.sortInfo.firstElementsRadioOptions,
+                        firstElementsSelectedOption = uiState.sortInfo.firstElementsSelectedOption,
                         onFirstElementsOptionSelected = viewModel::onFirstElementsOptionSelected
                     )
                 }
 
-                BottomSheetStatus.Hidden -> {}
+                else -> {}
             }
         }
     }
