@@ -36,9 +36,9 @@ import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
 @Composable
 fun ColorCircle(
+    isSelected: Boolean,
     color: Color,
     onClick: (Color) -> Unit,
-    isSelected: Boolean,
     modifier: Modifier = Modifier,
     size: Dp = 36.dp
 ) {

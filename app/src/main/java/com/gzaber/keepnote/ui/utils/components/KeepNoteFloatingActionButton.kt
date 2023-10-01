@@ -19,8 +19,8 @@ import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
 @Composable
 fun KeepNoteFloatingActionButton(
-    onClick: () -> Unit,
     @StringRes contentDescription: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector = Icons.Filled.Add
 ) {

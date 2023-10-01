@@ -32,14 +32,14 @@ import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
 @Composable
 fun TwoButtonsBottomSheetContent(
-    firstButtonOnClick: () -> Unit,
     @DrawableRes firstButtonIconRes: Int,
     @StringRes firstButtonContentDescriptionRes: Int,
     @StringRes firstButtonTextRes: Int,
-    secondButtonOnClick: () -> Unit,
+    firstButtonOnClick: () -> Unit,
     @DrawableRes secondButtonIconRes: Int,
     @StringRes secondButtonContentDescriptionRes: Int,
     @StringRes secondButtonTextRes: Int,
+    secondButtonOnClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -155,8 +155,8 @@ fun RadioRow(
 @Composable
 fun BottomSheetRadioGroup(
     @StringRes titleRes: Int,
-    radioOptions: List<Int>,
-    selectedOption: Int,
+    @StringRes radioOptions: List<Int>,
+    @StringRes selectedOption: Int,
     onOptionSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -179,15 +179,15 @@ fun BottomSheetRadioGroup(
 
 @Composable
 fun SortBottomSheetContent(
-    modifier: Modifier = Modifier,
-    sortRadioOptions: List<Int>,
-    sortSelectedOption: Int,
+    @StringRes sortRadioOptions: List<Int>,
+    @StringRes sortSelectedOption: Int,
     onSortOptionSelected: (Int) -> Unit,
-    orderRadioOptions: List<Int>,
-    orderSelectedOption: Int,
+    @StringRes orderRadioOptions: List<Int>,
+    @StringRes orderSelectedOption: Int,
     onOrderOptionSelected: (Int) -> Unit,
-    firstElementsRadioOptions: List<Int>? = null,
-    firstElementsSelectedOption: Int? = null,
+    modifier: Modifier = Modifier,
+    @StringRes firstElementsRadioOptions: List<Int>? = null,
+    @StringRes firstElementsSelectedOption: Int? = null,
     onFirstElementsOptionSelected: ((Int) -> Unit)? = null,
 ) {
     Column(

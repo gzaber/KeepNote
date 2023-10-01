@@ -34,7 +34,6 @@ class NoteDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val noteId: String? = savedStateHandle[KeepNoteDestinationArgs.NOTE_ID_ARG]
-
     private val _uiState = MutableStateFlow(NoteDetailsUiState())
     val uiState: StateFlow<NoteDetailsUiState> = _uiState.asStateFlow()
 

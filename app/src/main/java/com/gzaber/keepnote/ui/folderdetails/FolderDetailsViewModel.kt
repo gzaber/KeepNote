@@ -26,7 +26,7 @@ enum class FolderDetailsStatus {
     LOADING, SUCCESS, FAILURE
 }
 
-data class FilterInfo(
+data class SortInfo(
     val sortRadioOptions: List<Int> = listOf(R.string.radio_date, R.string.radio_name),
     val sortSelectedOption: Int = sortRadioOptions.first(),
     val orderRadioOptions: List<Int> = listOf(R.string.radio_ascending, R.string.radio_descending),
@@ -39,7 +39,7 @@ data class FolderDetailsUiState(
     val notes: List<Note> = listOf(),
     val isGridView: Boolean = false,
     val isDeleteFailure: Boolean = false,
-    val filterInfo: FilterInfo = FilterInfo()
+    val filterInfo: SortInfo = SortInfo()
 )
 
 @HiltViewModel
@@ -52,7 +52,7 @@ class FolderDetailsViewModel @Inject constructor(
     private val folderId: String? = savedStateHandle[KeepNoteDestinationArgs.FOLDER_ID_ARG]
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _filterInfo: MutableStateFlow<FilterInfo> = MutableStateFlow(FilterInfo())
+    private val _sortInfo: MutableStateFlow<SortInfo> = MutableStateFlow(SortInfo())
 
     private val _uiState = if (folderId != null) {
         combine(
@@ -60,16 +60,16 @@ class FolderDetailsViewModel @Inject constructor(
             notesRepository.getSecondLevelNotesFlow(folderId = folderId.toInt()),
             _isGridView,
             _isDeleteFailure,
-            _filterInfo
-        ) { folder, notes, isGridView, isDeleteFailure, filterInfo ->
-            val sortedNotes = sortNotes(notes, filterInfo)
+            _sortInfo
+        ) { folder, notes, isGridView, isDeleteFailure, sortInfo ->
+            val sortedNotes = sortNotes(notes, sortInfo)
             FolderDetailsUiState(
                 status = FolderDetailsStatus.SUCCESS,
                 folder = folder,
                 notes = sortedNotes,
                 isGridView = isGridView,
                 isDeleteFailure = isDeleteFailure,
-                filterInfo = filterInfo
+                filterInfo = sortInfo
             )
         }.catch {
             FolderDetailsUiState(status = FolderDetailsStatus.FAILURE)
@@ -80,9 +80,7 @@ class FolderDetailsViewModel @Inject constructor(
                 initialValue = FolderDetailsUiState()
             )
     } else {
-        MutableStateFlow(
-            FolderDetailsUiState(status = FolderDetailsStatus.FAILURE)
-        )
+        MutableStateFlow(FolderDetailsUiState(status = FolderDetailsStatus.FAILURE))
     }
 
     val uiState: StateFlow<FolderDetailsUiState> = _uiState
@@ -92,13 +90,13 @@ class FolderDetailsViewModel @Inject constructor(
     }
 
     fun onSortOptionSelected(optionSelected: Int) {
-        _filterInfo.update {
+        _sortInfo.update {
             it.copy(sortSelectedOption = optionSelected)
         }
     }
 
     fun onOrderOptionSelected(optionSelected: Int) {
-        _filterInfo.update {
+        _sortInfo.update {
             it.copy(orderSelectedOption = optionSelected)
         }
     }
@@ -117,18 +115,18 @@ class FolderDetailsViewModel @Inject constructor(
         _isDeleteFailure.value = false
     }
 
-    private fun sortNotes(notes: List<Note>, filterInfo: FilterInfo): List<Note> {
-        return when (filterInfo.orderSelectedOption) {
-            filterInfo.orderRadioOptions.first() -> {
-                when (filterInfo.sortSelectedOption) {
-                    filterInfo.sortRadioOptions.first() -> notes.sortedBy { it.title }
+    private fun sortNotes(notes: List<Note>, sortInfo: SortInfo): List<Note> {
+        return when (sortInfo.orderSelectedOption) {
+            sortInfo.orderRadioOptions.first() -> {
+                when (sortInfo.sortSelectedOption) {
+                    sortInfo.sortRadioOptions.first() -> notes.sortedBy { it.title }
                     else -> notes.sortedBy { it.date }
                 }
             }
 
             else -> {
-                when (filterInfo.sortSelectedOption) {
-                    filterInfo.sortRadioOptions.first() -> notes.sortedByDescending { it.title }
+                when (sortInfo.sortSelectedOption) {
+                    sortInfo.sortRadioOptions.first() -> notes.sortedByDescending { it.title }
                     else -> notes.sortedByDescending { it.date }
                 }
             }
