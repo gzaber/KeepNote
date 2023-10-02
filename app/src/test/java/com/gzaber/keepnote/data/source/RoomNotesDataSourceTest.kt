@@ -36,7 +36,7 @@ class RoomNotesDataSourceTest {
     )
 
     @Test
-    fun getFirstLevelNotesFlow_emitsListOfFirstLevelNotes() = runTest {
+    fun getFirstLevelNotesFlow_emitsListOfFirstLevelNoteEntities() = runTest {
         val mockNoteDao = mock<NoteDao> {
             on { observeFirstLevel() } doReturn flow { emit(listOf(note1, note2)) }
         }
@@ -62,7 +62,7 @@ class RoomNotesDataSourceTest {
     }
 
     @Test
-    fun getSecondLevelNotesFlow_emitsListOfSecondLevelNotes() = runTest {
+    fun getSecondLevelNotesFlow_emitsListOfSecondLevelNoteEntities() = runTest {
         val mockNoteDao = mock<NoteDao> {
             on { observeSecondLevel(any()) } doReturn flow {
                 emit(
@@ -121,9 +121,9 @@ class RoomNotesDataSourceTest {
         }
 
         val sut = RoomNotesDataSource(mockNoteDao)
-        sut.createNote(note1)
+        sut.createNote(note1.copy(id = null))
 
-        verify(mockNoteDao).create(note1)
+        verify(mockNoteDao).create(note1.copy(id = null))
     }
 
     @Test

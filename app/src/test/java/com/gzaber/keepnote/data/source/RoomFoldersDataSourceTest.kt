@@ -67,9 +67,9 @@ class RoomFoldersDataSourceTest {
         }
 
         val sut = RoomFoldersDataSource(mockFolderDao)
-        sut.createFolder(folder1)
+        sut.createFolder(folder1.copy(id = null))
 
-        verify(mockFolderDao).create(folder1)
+        verify(mockFolderDao).create(folder1.copy(id = null))
     }
 
     @Test
