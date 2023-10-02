@@ -6,5 +6,5 @@ data class Folder(
     val id: Int? = null,
     val name: String,
     val color: Int,
-    val date: Date = Date()
+    val date: Date
 )

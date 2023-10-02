@@ -6,6 +6,7 @@ import com.gzaber.keepnote.data.repository.model.toEntity
 import com.gzaber.keepnote.data.repository.model.toModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Date
 import javax.inject.Inject
 
 class DefaultFoldersRepository @Inject constructor(
@@ -27,11 +28,11 @@ class DefaultFoldersRepository @Inject constructor(
     }
 
     override suspend fun createFolder(folder: Folder) {
-        foldersDataSource.createFolder(folder.toEntity())
+        foldersDataSource.createFolder(folder.toEntity().copy(date = Date()))
     }
 
     override suspend fun updateFolder(folder: Folder) {
-        foldersDataSource.updateFolder(folder.toEntity())
+        foldersDataSource.updateFolder(folder.toEntity().copy(date = Date()))
     }
 
     override suspend fun deleteFolder(folderId: Int) {

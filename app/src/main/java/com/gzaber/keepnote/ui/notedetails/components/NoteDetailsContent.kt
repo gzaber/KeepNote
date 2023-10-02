@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 import com.gzaber.keepnote.ui.utils.components.DetailsHeader
+import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.utils.model.toNote
 
 @Composable
 fun NoteDetailsContent(
@@ -44,11 +46,11 @@ fun NoteDetailsContent(
 fun NoteDetailsContentPreview() {
     KeepNoteTheme {
         NoteDetailsContent(
-            note = Note(
-                title = "Volutpat diam ut venenatis tellus",
+            note = Element.empty().copy(
+                name = "Volutpat diam ut venenatis tellus",
                 content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ipsum dolor sit amet consectetur adipiscing elit ut aliquam. Aenean vel elit scelerisque mauris pellentesque pulvinar. Sed blandit libero volutpat sed cras ornare. Malesuada fames ac turpis egestas integer.",
                 color = Color.Green.toArgb()
-            ),
+            ).toNote(),
             contentPadding = PaddingValues(16.dp)
         )
     }

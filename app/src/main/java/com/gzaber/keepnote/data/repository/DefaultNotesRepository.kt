@@ -6,6 +6,7 @@ import com.gzaber.keepnote.data.repository.model.toEntity
 import com.gzaber.keepnote.data.repository.model.toModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Date
 import javax.inject.Inject
 
 class DefaultNotesRepository @Inject constructor(
@@ -35,11 +36,11 @@ class DefaultNotesRepository @Inject constructor(
     }
 
     override suspend fun createNote(note: Note) {
-        notesDataSource.createNote(note.toEntity())
+        notesDataSource.createNote(note.toEntity().copy(date = Date()))
     }
 
     override suspend fun updateNote(note: Note) {
-        notesDataSource.updateNote(note.toEntity())
+        notesDataSource.updateNote(note.toEntity().copy(date = Date()))
     }
 
     override suspend fun deleteNote(noteId: Int) {

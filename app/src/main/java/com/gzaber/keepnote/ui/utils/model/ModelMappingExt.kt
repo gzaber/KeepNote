@@ -39,6 +39,7 @@ fun Element.toFolder(): Folder {
 fun Folder.toElement(): Element {
     return Element(
         id = id,
+        folderId = null,
         isNote = false,
         name = name,
         content = "",
