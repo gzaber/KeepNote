@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -152,11 +151,10 @@ fun NoteElementGridItemPreview() {
         ElementItem(
             modifier = Modifier.width(200.dp),
             isGridItem = true,
-            element = Element(
+            element = Element.empty().copy(
                 isNote = true,
                 name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
-                color = Color.Red.toArgb()
+                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -169,11 +167,9 @@ fun FolderElementGridItemPreview() {
         ElementItem(
             modifier = Modifier.width(200.dp),
             isGridItem = true,
-            element = Element(
+            element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "",
-                color = Color.Red.toArgb()
+                name = "Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }
@@ -185,11 +181,10 @@ fun NoteElementListItemPreview() {
     KeepNoteTheme {
         ElementItem(
             isGridItem = false,
-            element = Element(
+            element = Element.empty().copy(
                 isNote = true,
                 name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
-                color = Color.Red.toArgb()
+                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -201,11 +196,9 @@ fun FolderElementListItemPreview() {
     KeepNoteTheme {
         ElementItem(
             isGridItem = false,
-            element = Element(
+            element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "",
-                color = Color.Red.toArgb()
+                name = "Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }

@@ -80,25 +80,25 @@ fun ElementsListContentPreview() {
             isGridView = false,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "eget mauris pharetra et ultrices neque ornare aenean",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = false,
                     name = "eget mauris pharetra et ultrices neque ornare aenean",
                     content = "",
                     color = Color.Green.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "Note title",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = false,
                     name = "eget mauris pharetra et ultrices neque ornare aenean",
                     content = "",
@@ -117,25 +117,25 @@ fun ElementsGridContentPreview() {
             isGridView = true,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "Note title",
                     content = "Lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = false,
                     name = "Folder name",
                     content = "",
                     color = Color.Green.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "Note title",
                     content = "Lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = false,
                     name = "Folder name",
                     content = "",
@@ -154,13 +154,13 @@ fun FolderDetailsListContentPreview() {
             isGridView = false,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "eget mauris pharetra et ultrices neque ornare aenean",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "Note title",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
@@ -181,13 +181,13 @@ fun FolderDetailsGridContentPreview() {
             isGridView = true,
             contentPadding = PaddingValues(8.dp),
             elements = listOf(
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "eget mauris pharetra et ultrices neque ornare aenean",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
-                Element(
+                Element.empty().copy(
                     isNote = true,
                     name = "Note title",
                     content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
