@@ -28,11 +28,11 @@ class DefaultFoldersRepository @Inject constructor(
     }
 
     override suspend fun createFolder(folder: Folder) {
-        foldersDataSource.createFolder(folder.toEntity().copy(date = Date()))
+        foldersDataSource.createFolder(folder.toEntity())
     }
 
     override suspend fun updateFolder(folder: Folder) {
-        foldersDataSource.updateFolder(folder.toEntity().copy(date = Date()))
+        foldersDataSource.updateFolder(folder.toEntity())
     }
 
     override suspend fun deleteFolder(folderId: Int) {
