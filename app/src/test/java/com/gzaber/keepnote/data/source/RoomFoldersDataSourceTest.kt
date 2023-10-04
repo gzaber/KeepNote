@@ -6,29 +6,37 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mock
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class RoomFoldersDataSourceTest {
 
+    private lateinit var dataSource: FoldersDataSource
     private val folder1 = FolderEntity(id = 1, name = "Folder1", color = 111111, date = Date())
     private val folder2 = FolderEntity(id = 2, name = "Folder1", color = 222222, date = Date())
 
+    @Mock
+    private lateinit var mockFolderDao: FolderDao
+
+    @Before
+    fun setUp() {
+        dataSource = RoomFoldersDataSource(mockFolderDao)
+    }
+
     @Test
     fun getAllFoldersFlow_emitsListOfFolderEntities() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            on { observeAll() } doReturn flow { emit(listOf(folder1, folder2)) }
-        }
+        `when`(mockFolderDao.observeAll())
+            .thenReturn(flow { emit(listOf(folder1, folder2)) })
 
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        val result = sut.getAllFoldersFlow().first()
+        val result = dataSource.getAllFoldersFlow().first()
 
         assertEquals(result, listOf(folder1, folder2))
         verify(mockFolderDao).observeAll()
@@ -36,12 +44,9 @@ class RoomFoldersDataSourceTest {
 
     @Test
     fun getAllFoldersFlow_emitsEmptyList() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            on { observeAll() } doReturn flow { emit(emptyList()) }
-        }
+        `when`(mockFolderDao.observeAll()).thenReturn(flow { emit(emptyList()) })
 
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        val result = sut.getAllFoldersFlow().first()
+        val result = dataSource.getAllFoldersFlow().first()
 
         assertEquals(result, emptyList<FolderEntity>())
         verify(mockFolderDao).observeAll()
@@ -49,12 +54,9 @@ class RoomFoldersDataSourceTest {
 
     @Test
     fun getFolderByIdFlow_emitsFolderEntity() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            on { observeById(any()) } doReturn flow { emit(folder1) }
-        }
+        `when`(mockFolderDao.observeById(anyInt())).thenReturn(flow { emit(folder1) })
 
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        val result = sut.getFolderByIdFlow(1).first()
+        val result = dataSource.getFolderByIdFlow(1).first()
 
         assertEquals(result, folder1)
         verify(mockFolderDao).observeById(1)
@@ -62,36 +64,21 @@ class RoomFoldersDataSourceTest {
 
     @Test
     fun createFolder_invokesDaoMethod() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            onBlocking { create(any()) } doReturn Unit
-        }
-
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        sut.createFolder(folder1.copy(id = null))
+        dataSource.createFolder(folder1.copy(id = null))
 
         verify(mockFolderDao).create(folder1.copy(id = null))
     }
 
     @Test
     fun updateFolder_invokesDaoMethod() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            onBlocking { update(any()) } doReturn Unit
-        }
-
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        sut.updateFolder(folder1)
+        dataSource.updateFolder(folder1)
 
         verify(mockFolderDao).update(folder1)
     }
 
     @Test
     fun deleteFolder_invokesDaoMethod() = runTest {
-        val mockFolderDao = mock<FolderDao> {
-            onBlocking { delete(any()) } doReturn Unit
-        }
-
-        val sut = RoomFoldersDataSource(mockFolderDao)
-        sut.deleteFolder(1)
+        dataSource.deleteFolder(1)
 
         verify(mockFolderDao).delete(1)
     }
