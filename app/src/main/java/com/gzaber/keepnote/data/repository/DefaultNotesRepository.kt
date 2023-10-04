@@ -36,11 +36,11 @@ class DefaultNotesRepository @Inject constructor(
     }
 
     override suspend fun createNote(note: Note) {
-        notesDataSource.createNote(note.toEntity().copy(date = Date()))
+        notesDataSource.createNote(note.toEntity())
     }
 
     override suspend fun updateNote(note: Note) {
-        notesDataSource.updateNote(note.toEntity().copy(date = Date()))
+        notesDataSource.updateNote(note.toEntity())
     }
 
     override suspend fun deleteNote(noteId: Int) {
