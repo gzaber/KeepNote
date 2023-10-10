@@ -39,7 +39,7 @@ data class FolderDetailsUiState(
     val notes: List<Note> = listOf(),
     val isGridView: Boolean = false,
     val isDeleteFailure: Boolean = false,
-    val filterInfo: SortInfo = SortInfo()
+    val sortInfo: SortInfo = SortInfo()
 )
 
 @HiltViewModel
@@ -49,30 +49,46 @@ class FolderDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val folderId: String? = savedStateHandle[KeepNoteDestinationArgs.FOLDER_ID_ARG]
+    private val _folderId: String? = savedStateHandle[KeepNoteDestinationArgs.FOLDER_ID_ARG]
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isRepositoryFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _sortInfo: MutableStateFlow<SortInfo> = MutableStateFlow(SortInfo())
 
-    private val _uiState = if (folderId != null) {
+
+    val uiState = if (_folderId != null) {
+        val folder: StateFlow<Folder> =
+            foldersRepository.getFolderByIdFlow(folderId = _folderId.toInt())
+                .catch { _isRepositoryFailure.value = true }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = Element.empty().toFolder()
+                )
+        val notes: StateFlow<List<Note>> =
+            notesRepository.getSecondLevelNotesFlow(folderId = _folderId.toInt())
+                .catch { _isRepositoryFailure.value = true }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = listOf()
+                )
         combine(
-            foldersRepository.getFolderByIdFlow(folderId = folderId.toInt()),
-            notesRepository.getSecondLevelNotesFlow(folderId = folderId.toInt()),
+            folder,
+            notes,
             _isGridView,
             _isDeleteFailure,
             _sortInfo
         ) { folder, notes, isGridView, isDeleteFailure, sortInfo ->
             val sortedNotes = sortNotes(notes, sortInfo)
             FolderDetailsUiState(
-                status = FolderDetailsStatus.SUCCESS,
+                status = if (_isRepositoryFailure.value) FolderDetailsStatus.FAILURE else FolderDetailsStatus.SUCCESS,
                 folder = folder,
                 notes = sortedNotes,
                 isGridView = isGridView,
                 isDeleteFailure = isDeleteFailure,
-                filterInfo = sortInfo
+                sortInfo = sortInfo
             )
-        }.catch {
-            FolderDetailsUiState(status = FolderDetailsStatus.FAILURE)
         }
             .stateIn(
                 scope = viewModelScope,
@@ -82,8 +98,6 @@ class FolderDetailsViewModel @Inject constructor(
     } else {
         MutableStateFlow(FolderDetailsUiState(status = FolderDetailsStatus.FAILURE))
     }
-
-    val uiState: StateFlow<FolderDetailsUiState> = _uiState
 
     fun toggleView() {
         _isGridView.value = _isGridView.value.not()
@@ -119,15 +133,15 @@ class FolderDetailsViewModel @Inject constructor(
         return when (sortInfo.orderSelectedOption) {
             sortInfo.orderRadioOptions.first() -> {
                 when (sortInfo.sortSelectedOption) {
-                    sortInfo.sortRadioOptions.first() -> notes.sortedBy { it.title }
-                    else -> notes.sortedBy { it.date }
+                    sortInfo.sortRadioOptions.first() -> notes.sortedBy { it.date }
+                    else -> notes.sortedBy { it.title }
                 }
             }
 
             else -> {
                 when (sortInfo.sortSelectedOption) {
-                    sortInfo.sortRadioOptions.first() -> notes.sortedByDescending { it.title }
-                    else -> notes.sortedByDescending { it.date }
+                    sortInfo.sortRadioOptions.first() -> notes.sortedByDescending { it.date }
+                    else -> notes.sortedByDescending { it.title }
                 }
             }
         }

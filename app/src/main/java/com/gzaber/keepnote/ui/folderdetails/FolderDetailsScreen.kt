@@ -138,11 +138,11 @@ fun FolderDetailsScreen(
 
                 BottomSheetStatus.SortNotes -> {
                     SortBottomSheetContent(
-                        sortRadioOptions = uiState.filterInfo.sortRadioOptions,
-                        sortSelectedOption = uiState.filterInfo.sortSelectedOption,
+                        sortRadioOptions = uiState.sortInfo.sortRadioOptions,
+                        sortSelectedOption = uiState.sortInfo.sortSelectedOption,
                         onSortOptionSelected = viewModel::onSortOptionSelected,
-                        orderRadioOptions = uiState.filterInfo.orderRadioOptions,
-                        orderSelectedOption = uiState.filterInfo.orderSelectedOption,
+                        orderRadioOptions = uiState.sortInfo.orderRadioOptions,
+                        orderSelectedOption = uiState.sortInfo.orderSelectedOption,
                         onOrderOptionSelected = viewModel::onOrderOptionSelected
                     )
                 }
