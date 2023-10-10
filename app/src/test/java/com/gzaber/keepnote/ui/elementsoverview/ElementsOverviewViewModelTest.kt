@@ -55,15 +55,13 @@ class ElementsOverviewViewModelTest {
             .thenReturn(flow { emit(listOf(folder)) })
         `when`(mockNotesRepository.getFirstLevelNotesFlow())
             .thenReturn(flow { emit(listOf(note)) })
-        createViewModel()
+        viewModel = createViewModel()
     }
 
-    private fun createViewModel() {
-        viewModel = ElementsOverviewViewModel(
-            foldersRepository = mockFoldersRepository,
-            notesRepository = mockNotesRepository
-        )
-    }
+    private fun createViewModel() = ElementsOverviewViewModel(
+        foldersRepository = mockFoldersRepository,
+        notesRepository = mockNotesRepository
+    )
 
     @Test
     fun initialState_successStatus() = runTest {
@@ -83,8 +81,7 @@ class ElementsOverviewViewModelTest {
     fun initialState_foldersRepositoryException_failureStatus() = runTest {
         `when`(mockFoldersRepository.getAllFoldersFlow())
             .thenReturn(flow<List<Folder>> { listOf(folder) }.onStart { throw NullPointerException() })
-
-        createViewModel()
+        viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(
@@ -98,8 +95,7 @@ class ElementsOverviewViewModelTest {
     fun initialState_notesRepositoryException_failureStatus() = runTest {
         `when`(mockNotesRepository.getFirstLevelNotesFlow())
             .thenReturn(flow<List<Note>> { listOf(note) }.onStart { throw NullPointerException() })
-
-        createViewModel()
+        viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(
@@ -111,33 +107,23 @@ class ElementsOverviewViewModelTest {
 
     @Test
     fun toggleView() = runTest {
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement())
+        )
 
         viewModel.uiState.test {
+            assertEquals(uiState, awaitItem())
+
+            viewModel.toggleView()
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement())
-                ),
+                uiState.copy(isGridView = true),
                 awaitItem()
             )
 
             viewModel.toggleView()
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isGridView = true
-                ),
-                awaitItem()
-            )
-
-            viewModel.toggleView()
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isGridView = false
-                ),
+                uiState.copy(isGridView = false),
                 awaitItem()
             )
             expectNoEvents()
@@ -148,31 +134,24 @@ class ElementsOverviewViewModelTest {
     fun onSortOptionSelected() = runTest {
         val dateSelectedOption = SortInfo().sortRadioOptions.first()
         val nameSelectedOption = SortInfo().sortRadioOptions.last()
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
 
             viewModel.onSortOptionSelected(nameSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(sortSelectedOption = nameSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(sortSelectedOption = nameSelectedOption)),
+                awaitItem()
             )
 
             viewModel.onSortOptionSelected(dateSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(sortSelectedOption = dateSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(sortSelectedOption = dateSelectedOption)),
+                awaitItem()
             )
             expectNoEvents()
         }
@@ -183,26 +162,21 @@ class ElementsOverviewViewModelTest {
         val ascendingSelectedOption = SortInfo().orderRadioOptions.first()
         val descendingSelectedOption = SortInfo().orderRadioOptions.last()
         val nameSelectedOption = SortInfo().sortRadioOptions.last()
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
 
             viewModel.onOrderOptionSelected(descendingSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(orderSelectedOption = descendingSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(orderSelectedOption = descendingSelectedOption)),
+                awaitItem()
             )
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
+                uiState.copy(
                     elements = listOf(note.toElement(), folder.toElement()),
                     sortInfo = SortInfo().copy(orderSelectedOption = descendingSelectedOption)
                 ), awaitItem()
@@ -210,34 +184,25 @@ class ElementsOverviewViewModelTest {
 
             viewModel.onOrderOptionSelected(ascendingSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
+                uiState.copy(
                     elements = listOf(note.toElement(), folder.toElement()),
                     sortInfo = SortInfo().copy(orderSelectedOption = ascendingSelectedOption)
                 ), awaitItem()
             )
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(orderSelectedOption = ascendingSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(orderSelectedOption = ascendingSelectedOption)),
+                awaitItem()
             )
 
             viewModel.onSortOptionSelected(nameSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(sortSelectedOption = nameSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(sortSelectedOption = nameSelectedOption)),
+                awaitItem()
             )
 
             viewModel.onOrderOptionSelected(descendingSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
+                uiState.copy(
                     sortInfo = SortInfo().copy(
                         sortSelectedOption = nameSelectedOption,
                         orderSelectedOption = descendingSelectedOption
@@ -245,8 +210,7 @@ class ElementsOverviewViewModelTest {
                 ), awaitItem()
             )
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
+                uiState.copy(
                     elements = listOf(note.toElement(), folder.toElement()),
                     sortInfo = SortInfo().copy(
                         sortSelectedOption = nameSelectedOption,
@@ -264,35 +228,27 @@ class ElementsOverviewViewModelTest {
         val notApplicableSelectedOption = SortInfo().firstElementsRadioOptions[0]
         val foldersSelectedOption = SortInfo().firstElementsRadioOptions[1]
         val notesSelectedOption = SortInfo().firstElementsRadioOptions[2]
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
 
             viewModel.onFirstElementsOptionSelected(foldersSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(firstElementsSelectedOption = foldersSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(firstElementsSelectedOption = foldersSelectedOption)),
+                awaitItem()
             )
 
             viewModel.onFirstElementsOptionSelected(notesSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(firstElementsSelectedOption = notesSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(firstElementsSelectedOption = notesSelectedOption)),
+                awaitItem()
             )
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
+                uiState.copy(
                     elements = listOf(note.toElement(), folder.toElement()),
                     sortInfo = SortInfo().copy(firstElementsSelectedOption = notesSelectedOption)
                 ), awaitItem()
@@ -300,18 +256,14 @@ class ElementsOverviewViewModelTest {
 
             viewModel.onFirstElementsOptionSelected(notApplicableSelectedOption)
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
+                uiState.copy(
                     elements = listOf(note.toElement(), folder.toElement()),
                     sortInfo = SortInfo().copy(firstElementsSelectedOption = notApplicableSelectedOption)
                 ), awaitItem()
             )
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    sortInfo = SortInfo().copy(firstElementsSelectedOption = notApplicableSelectedOption)
-                ), awaitItem()
+                uiState.copy(sortInfo = SortInfo().copy(firstElementsSelectedOption = notApplicableSelectedOption)),
+                awaitItem()
             )
 
             expectNoEvents()
@@ -337,21 +289,18 @@ class ElementsOverviewViewModelTest {
     @Test
     fun deleteElement_foldersRepository_failure() = runTest {
         `when`(mockFoldersRepository.deleteFolder(anyInt())).thenThrow(NullPointerException())
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
+
             viewModel.deleteElement(folder.toElement())
             assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isDeleteFailure = true
-                ), awaitItem()
+                uiState.copy(isDeleteFailure = true),
+                awaitItem()
             )
             expectNoEvents()
         }
@@ -377,22 +326,16 @@ class ElementsOverviewViewModelTest {
     @Test
     fun deleteElement_notesRepository_failure() = runTest {
         `when`(mockNotesRepository.deleteNote(anyInt())).thenThrow(NullPointerException())
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
+
             viewModel.deleteElement(note.toElement())
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isDeleteFailure = true
-                ), awaitItem()
-            )
+            assertEquals(uiState.copy(isDeleteFailure = true), awaitItem())
             expectNoEvents()
         }
         verify(mockNotesRepository).deleteNote(1)
@@ -400,22 +343,16 @@ class ElementsOverviewViewModelTest {
 
     @Test
     fun deleteElement_nullId_failure() = runTest {
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
 
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
+
             viewModel.deleteElement(Element.empty())
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isDeleteFailure = true
-                ), awaitItem()
-            )
+            assertEquals(uiState.copy(isDeleteFailure = true), awaitItem())
             expectNoEvents()
         }
     }
@@ -423,30 +360,18 @@ class ElementsOverviewViewModelTest {
     @Test
     fun snackbarMessageShown() = runTest {
         `when`(mockNotesRepository.deleteNote(anyInt())).thenThrow(NullPointerException())
-
+        val uiState = ElementsOverviewUiState(
+            status = ElementsOverviewStatus.SUCCESS,
+            elements = listOf(folder.toElement(), note.toElement()),
+        )
         viewModel.uiState.test {
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                ), awaitItem()
-            )
+            assertEquals(uiState, awaitItem())
+
             viewModel.deleteElement(note.toElement())
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isDeleteFailure = true
-                ), awaitItem()
-            )
+            assertEquals(uiState.copy(isDeleteFailure = true), awaitItem())
+
             viewModel.snackbarMessageShown()
-            assertEquals(
-                ElementsOverviewUiState(
-                    status = ElementsOverviewStatus.SUCCESS,
-                    elements = listOf(folder.toElement(), note.toElement()),
-                    isDeleteFailure = false
-                ), awaitItem()
-            )
+            assertEquals(uiState.copy(isDeleteFailure = false), awaitItem())
             expectNoEvents()
         }
     }
