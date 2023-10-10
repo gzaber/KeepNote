@@ -10,7 +10,6 @@ import com.gzaber.keepnote.ui.utils.model.toElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -32,9 +31,8 @@ data class SortInfo(
         R.string.radio_folders,
         R.string.radio_notes
     ),
-    val firstElementsSelectedOption: Int = firstElementsRadioOptions.first(),
-
-    )
+    val firstElementsSelectedOption: Int = firstElementsRadioOptions.first()
+)
 
 data class ElementsOverviewUiState(
     val status: ElementsOverviewStatus = ElementsOverviewStatus.LOADING,
@@ -52,33 +50,45 @@ class ElementsOverviewViewModel @Inject constructor(
 
     private val _isGridView: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _isDeleteFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isRepositoryFailure: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _sortInfo: MutableStateFlow<SortInfo> = MutableStateFlow(SortInfo())
 
-    private val _uiState = combine(
+    private val _elements = combine(
         foldersRepository.getAllFoldersFlow(),
         notesRepository.getFirstLevelNotesFlow(),
+        _sortInfo
+    ) { folders, notes, sortInfo ->
+        val elements = folders.map { it.toElement() } + notes.map { it.toElement() }
+        sortElements(elements, sortInfo)
+    }
+        .catch { _isRepositoryFailure.value = true }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = listOf()
+        )
+
+    val uiState = combine(
+        _elements,
         _isGridView,
         _isDeleteFailure,
+        _isRepositoryFailure,
         _sortInfo
-    ) { folders, notes, isGridView, isDeleteFailure, sortInfo ->
-        val elements = folders.map { it.toElement() } + notes.map { it.toElement() }
-        val sortedElements = sortElements(elements, sortInfo)
+    ) { elements, isGridView, isDeleteFailure, isRepositoryFailure, sortInfo ->
+
         ElementsOverviewUiState(
-            status = ElementsOverviewStatus.SUCCESS,
-            elements = sortedElements,
+            status = if (isRepositoryFailure) ElementsOverviewStatus.FAILURE else ElementsOverviewStatus.SUCCESS,
+            elements = elements,
             isGridView = isGridView,
             isDeleteFailure = isDeleteFailure,
             sortInfo = sortInfo
         )
     }
-        .catch { ElementsOverviewUiState(status = ElementsOverviewStatus.FAILURE) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = ElementsOverviewUiState()
         )
-
-    val uiState: StateFlow<ElementsOverviewUiState> = _uiState
 
     fun toggleView() {
         _isGridView.value = !_isGridView.value
@@ -112,7 +122,7 @@ class ElementsOverviewViewModel @Inject constructor(
                         foldersRepository.deleteFolder(element.id)
                     }
                 } else {
-                    throw (Exception())
+                    throw (NullPointerException())
                 }
             } catch (e: Throwable) {
                 _isDeleteFailure.value = true
@@ -123,6 +133,7 @@ class ElementsOverviewViewModel @Inject constructor(
     fun snackbarMessageShown() {
         _isDeleteFailure.value = false
     }
+
 
     private fun sortElements(elements: List<Element>, sortInfo: SortInfo): List<Element> {
         return when (sortInfo.firstElementsSelectedOption) {
@@ -149,15 +160,15 @@ class ElementsOverviewViewModel @Inject constructor(
         return when (sortInfo.orderSelectedOption) {
             sortInfo.orderRadioOptions.first() -> {
                 when (sortInfo.sortSelectedOption) {
-                    sortInfo.sortRadioOptions.first() -> elements.sortedBy { it.name }
-                    else -> elements.sortedBy { it.date }
+                    sortInfo.sortRadioOptions.first() -> elements.sortedBy { it.date }
+                    else -> elements.sortedBy { it.name }
                 }
             }
 
             else -> {
                 when (sortInfo.sortSelectedOption) {
-                    sortInfo.sortRadioOptions.first() -> elements.sortedByDescending { it.name }
-                    else -> elements.sortedByDescending { it.date }
+                    sortInfo.sortRadioOptions.first() -> elements.sortedByDescending { it.date }
+                    else -> elements.sortedByDescending { it.name }
                 }
             }
         }
