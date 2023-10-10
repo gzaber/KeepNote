@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -53,20 +52,21 @@ class NoteDetailsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            notesRepository.getNoteByIdFlow(noteId)
-                .catch {
-                    _uiState.update {
-                        it.copy(status = NoteDetailsStatus.FAILURE)
+            try {
+                notesRepository.getNoteByIdFlow(noteId)
+                    .first().let { note ->
+                        _uiState.update {
+                            it.copy(
+                                status = NoteDetailsStatus.SUCCESS,
+                                note = note
+                            )
+                        }
                     }
+            } catch (e: Throwable) {
+                _uiState.update {
+                    it.copy(status = NoteDetailsStatus.FAILURE)
                 }
-                .first().let { note ->
-                    _uiState.update {
-                        it.copy(
-                            status = NoteDetailsStatus.SUCCESS,
-                            note = note
-                        )
-                    }
-                }
+            }
         }
     }
 }
