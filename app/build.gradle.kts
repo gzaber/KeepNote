@@ -3,7 +3,58 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    jacoco
 }
+
+val jacocoTestReport = tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("test")
+
+    val excludes = listOf(
+        // Android
+        "**/R.class",
+        "**/R\$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/*Binding.class",
+        "**/*Binding*.*",
+        "**/*Dao_Impl*.class",
+        "**/*Args.class",
+        "**/*Args.Builder.class",
+        "**/*Directions*.class",
+        "**/*Creator.class",
+        "**/*Builder.class"
+    )
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    classDirectories.setFrom(
+        files(
+            fileTree("$buildDir/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com") {
+                exclude(excludes)
+            },
+            fileTree("$buildDir/tmp/kotlin-classes/${this.name}") {
+                exclude(excludes)
+            }
+        )
+    )
+
+    sourceDirectories.setFrom("$projectDir/src/main/java")
+    executionData.setFrom(file("$buildDir/jacoco/testDebugUnitTest.exec"))
+}
+
+tasks.withType<Test> {
+    finalizedBy("jacocoTestReport")
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = mutableListOf("jdk.internal.*")
+    }
+}
+
 
 android {
     namespace = "com.gzaber.keepnote"
@@ -63,10 +114,10 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.1")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation ("org.mockito:mockito-core:5.5.0")
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:5.1.0")
-    testImplementation ("app.cash.turbine:turbine:1.0.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
