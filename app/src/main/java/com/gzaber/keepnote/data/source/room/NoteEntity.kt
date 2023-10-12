@@ -3,6 +3,7 @@ package com.gzaber.keepnote.data.source.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.Date
@@ -14,7 +15,8 @@ import java.util.Date
         ForeignKey(
             entity = FolderEntity::class,
             childColumns = ["folder_id"],
-            parentColumns = ["id"]
+            parentColumns = ["id"],
+            onDelete = CASCADE
         )
     ]
 )
