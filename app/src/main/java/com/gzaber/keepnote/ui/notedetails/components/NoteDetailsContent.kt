@@ -32,6 +32,7 @@ fun NoteDetailsContent(
     ) {
         DetailsHeader(
             title = note.title,
+            subtitle = note.date.toString(),
             color = Color(note.color)
         )
         Text(

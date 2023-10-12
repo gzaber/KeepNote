@@ -14,7 +14,7 @@
         android:theme="@style/Theme.KeepNote"
         tools:targetApi="31">
         <activity
-            android:name= "androidx.activity.ComponentActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.KeepNote"
             android:windowSoftInputMode="adjustResize">

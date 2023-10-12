@@ -168,7 +168,11 @@ fun FolderDetailsListContentPreview() {
                 )
             )
         ) {
-            DetailsHeader(title = "Folder details", color = Color.Green)
+            DetailsHeader(
+                title = "Folder details",
+                subtitle = "Thu 22 September 2023",
+                color = Color.Green
+            )
         }
     }
 }
@@ -195,7 +199,11 @@ fun FolderDetailsGridContentPreview() {
                 )
             )
         ) {
-            DetailsHeader(title = "Folder details", color = Color.Green)
+            DetailsHeader(
+                title = "Folder details",
+                subtitle = "Thu 22 September 2023",
+                color = Color.Green
+            )
         }
     }
 }

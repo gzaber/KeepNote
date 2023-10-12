@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import org.robolectric.android.controller.ActivityController
 
 @RunWith(RobolectricTestRunner::class)
 class DetailsHeaderTest {
@@ -19,12 +20,15 @@ class DetailsHeaderTest {
 
     @Test
     fun myTest() {
+
+
         composeTestRule.setContent {
             KeepNoteTheme {
-                DetailsHeader(title = "header", color = Color.Red)
+                DetailsHeader(title = "header", subtitle = "2023", color = Color.Red)
             }
         }
 
         composeTestRule.onNodeWithText("header").assertIsDisplayed()
+        composeTestRule.onNodeWithText("2023").assertIsDisplayed()
     }
 }

@@ -106,14 +106,14 @@ fun EditDeleteElementBottomSheetContent(
     modifier: Modifier = Modifier
 ) {
     TwoButtonsBottomSheetContent(
-        firstButtonOnClick = editButtonOnClick,
-        firstButtonIconRes = R.drawable.ic_edit,
-        firstButtonContentDescriptionRes = R.string.edit_element,
-        firstButtonTextRes = R.string.edit,
-        secondButtonOnClick = deleteButtonOnClick,
-        secondButtonIconRes = R.drawable.ic_delete,
-        secondButtonContentDescriptionRes = R.string.delete_element,
-        secondButtonTextRes = R.string.delete,
+        firstButtonOnClick = deleteButtonOnClick,
+        firstButtonIconRes = R.drawable.ic_delete,
+        firstButtonContentDescriptionRes = R.string.delete_element,
+        firstButtonTextRes = R.string.delete,
+        secondButtonOnClick = editButtonOnClick,
+        secondButtonIconRes = R.drawable.ic_edit,
+        secondButtonContentDescriptionRes = R.string.edit_element,
+        secondButtonTextRes = R.string.edit,
         modifier = modifier
     )
 }
