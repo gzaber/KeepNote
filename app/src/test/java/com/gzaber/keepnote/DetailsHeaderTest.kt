@@ -24,10 +24,11 @@ class DetailsHeaderTest {
 
         composeTestRule.setContent {
             KeepNoteTheme {
-                DetailsHeader(title = "header", color = Color.Red)
+                DetailsHeader(title = "header", subtitle = "2023", color = Color.Red)
             }
         }
 
         composeTestRule.onNodeWithText("header").assertIsDisplayed()
+        composeTestRule.onNodeWithText("2023").assertIsDisplayed()
     }
 }
