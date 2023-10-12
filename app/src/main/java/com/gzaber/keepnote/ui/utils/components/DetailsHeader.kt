@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DetailsHeader(
     title: String,
+    subtitle: String,
     color: Color,
     modifier: Modifier = Modifier
 ) {
@@ -29,6 +30,10 @@ fun DetailsHeader(
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge
+        )
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
         )
         Spacer(modifier = Modifier.height(8.dp))
     }

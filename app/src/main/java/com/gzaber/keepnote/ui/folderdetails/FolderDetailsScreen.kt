@@ -100,6 +100,7 @@ fun FolderDetailsScreen(
             ) {
                 DetailsHeader(
                     title = uiState.folder.name,
+                    subtitle = uiState.folder.date.toString(),
                     color = Color(uiState.folder.color)
                 )
             }

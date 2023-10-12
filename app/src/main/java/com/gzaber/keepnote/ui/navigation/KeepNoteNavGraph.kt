@@ -74,8 +74,7 @@ fun KeepNoteNavGraph(
             )
         ) {
             NoteDetailsScreen(
-                onBackClick = { navController.popBackStack() },
-                onShareClick = { }
+                onBackClick = { navController.popBackStack() }
             )
         }
 
