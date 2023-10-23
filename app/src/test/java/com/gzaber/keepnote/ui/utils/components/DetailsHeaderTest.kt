@@ -1,16 +1,13 @@
-package com.gzaber.keepnote
+package com.gzaber.keepnote.ui.utils.components
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
-import com.gzaber.keepnote.ui.theme.KeepNoteTheme
-import com.gzaber.keepnote.ui.utils.components.DetailsHeader
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import org.robolectric.android.controller.ActivityController
 
 @RunWith(RobolectricTestRunner::class)
 class DetailsHeaderTest {
@@ -19,13 +16,13 @@ class DetailsHeaderTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun myTest() {
-
-
+    fun titleAndSubtitle_areDisplayed() {
         composeTestRule.setContent {
-            KeepNoteTheme {
-                DetailsHeader(title = "header", subtitle = "2023", color = Color.Red)
-            }
+            DetailsHeader(
+                title = "header",
+                subtitle = "2023",
+                color = Color.Red
+            )
         }
 
         composeTestRule.onNodeWithText("header").assertIsDisplayed()
