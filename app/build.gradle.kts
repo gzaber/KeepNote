@@ -133,6 +133,8 @@ dependencies {
     // Hilt
     val hiltVersion = "2.44"
     implementation("com.google.dagger:hilt-android:$hiltVersion")
+    testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     // Room
