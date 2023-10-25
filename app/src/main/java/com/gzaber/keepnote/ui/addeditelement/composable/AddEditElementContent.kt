@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.addeditelement.components
+package com.gzaber.keepnote.ui.addeditelement.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
-import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toElement
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

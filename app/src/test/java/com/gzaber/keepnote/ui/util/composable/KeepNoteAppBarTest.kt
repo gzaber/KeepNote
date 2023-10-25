@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed

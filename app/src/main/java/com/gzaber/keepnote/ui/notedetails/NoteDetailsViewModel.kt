@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
-import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toNote
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

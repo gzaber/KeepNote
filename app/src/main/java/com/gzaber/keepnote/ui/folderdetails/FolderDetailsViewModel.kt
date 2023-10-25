@@ -9,8 +9,8 @@ import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.data.repository.model.Folder
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
-import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toFolder
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toFolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

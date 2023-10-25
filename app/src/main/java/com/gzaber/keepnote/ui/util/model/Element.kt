@@ -1,6 +1,5 @@
-package com.gzaber.keepnote.ui.utils.model
+package com.gzaber.keepnote.ui.util.model
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.gzaber.keepnote.ui.theme.ColorSelectorColor1
 import java.util.Date

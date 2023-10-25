@@ -5,8 +5,8 @@ import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.data.repository.model.Folder
 import com.gzaber.keepnote.data.repository.model.Note
-import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toElement
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toElement
 import com.gzaber.keepnote.util.MainDispatcherRule
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart

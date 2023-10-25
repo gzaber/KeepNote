@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.model
+package com.gzaber.keepnote.ui.util.model
 
 import com.gzaber.keepnote.data.repository.model.Folder
 import com.gzaber.keepnote.data.repository.model.Note

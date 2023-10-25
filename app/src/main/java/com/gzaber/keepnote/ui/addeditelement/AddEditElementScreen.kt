@@ -16,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.addeditelement.components.AddEditElementContent
-import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
-import com.gzaber.keepnote.ui.utils.components.LoadingBox
+import com.gzaber.keepnote.ui.addeditelement.composable.AddEditElementContent
+import com.gzaber.keepnote.ui.util.composable.KeepNoteAppBar
+import com.gzaber.keepnote.ui.util.composable.LoadingBox
 
 
 @Composable

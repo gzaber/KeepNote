@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.notedetails.components
+package com.gzaber.keepnote.ui.notedetails.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,9 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
-import com.gzaber.keepnote.ui.utils.components.DetailsHeader
-import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toNote
+import com.gzaber.keepnote.ui.util.composable.DetailsHeader
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toNote
 
 @Composable
 fun NoteDetailsContent(

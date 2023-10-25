@@ -1,10 +1,10 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.util.model.Element
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

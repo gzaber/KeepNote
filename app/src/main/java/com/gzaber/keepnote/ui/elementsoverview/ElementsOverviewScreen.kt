@@ -22,15 +22,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.utils.components.CreateElementBottomSheetContent
-import com.gzaber.keepnote.ui.utils.components.EditDeleteElementBottomSheetContent
-import com.gzaber.keepnote.ui.utils.components.ElementsListGridContent
-import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
-import com.gzaber.keepnote.ui.utils.components.KeepNoteFloatingActionButton
-import com.gzaber.keepnote.ui.utils.components.KeepNoteModalBottomSheet
-import com.gzaber.keepnote.ui.utils.components.LoadingBox
-import com.gzaber.keepnote.ui.utils.components.SortBottomSheetContent
-import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.util.composable.CreateElementBottomSheetContent
+import com.gzaber.keepnote.ui.util.composable.EditDeleteElementBottomSheetContent
+import com.gzaber.keepnote.ui.util.composable.ElementsListGridContent
+import com.gzaber.keepnote.ui.util.composable.KeepNoteAppBar
+import com.gzaber.keepnote.ui.util.composable.KeepNoteFloatingActionButton
+import com.gzaber.keepnote.ui.util.composable.KeepNoteModalBottomSheet
+import com.gzaber.keepnote.ui.util.composable.LoadingBox
+import com.gzaber.keepnote.ui.util.composable.SortBottomSheetContent
+import com.gzaber.keepnote.ui.util.model.Element
 import kotlinx.coroutines.launch
 
 

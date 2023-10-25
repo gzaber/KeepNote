@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
-import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.util.model.Element
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
-import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.util.model.Element
 
 
 @OptIn(ExperimentalFoundationApi::class)
