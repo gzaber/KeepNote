@@ -16,7 +16,8 @@ fun KeepNoteModalBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable (BoxScope.() -> Unit) = {}
+    content: @Composable (BoxScope.() -> Unit)
+
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
