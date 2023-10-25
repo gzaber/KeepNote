@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +9,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+
+const val LOADING_BOX_TAG = "loadingBoxTag"
 
 @Composable
 fun LoadingBox(
@@ -19,7 +22,8 @@ fun LoadingBox(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues),
+            .padding(paddingValues)
+            .testTag(LOADING_BOX_TAG),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(

@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertContentDescriptionEquals
@@ -22,7 +22,7 @@ class BottomSheetContentsTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun twoButtonsBottomSheetContent_iconsAndTextsAreDisplayed() {
+    fun twoButtonsBottomSheetContent_textIsDisplayed_nodeIsClickable() {
         composeTestRule.setContent {
             TwoButtonsBottomSheetContent(
                 firstButtonOnClick = {},
@@ -49,7 +49,7 @@ class BottomSheetContentsTest {
     }
 
     @Test
-    fun createElementBottomSheetContent_textIsDisplayed_buttonsAreClickable() {
+    fun createElementBottomSheetContent_textIsDisplayed_nodeIsClickable() {
         composeTestRule.setContent {
             CreateElementBottomSheetContent(
                 folderButtonOnClick = {},
@@ -70,7 +70,7 @@ class BottomSheetContentsTest {
     }
 
     @Test
-    fun createElementBottomSheetContentPreview_textIsDisplayed_buttonsAreClickable() {
+    fun createElementBottomSheetContentPreview_isDisplayed() {
         composeTestRule.setContent {
             CreateElementBottomSheetContentPreview()
         }
@@ -88,7 +88,7 @@ class BottomSheetContentsTest {
     }
 
     @Test
-    fun editDeleteElementBottomSheetContent_textIsDisplayed_buttonsAreClickable() {
+    fun editDeleteElementBottomSheetContent_isDisplayed() {
         composeTestRule.setContent {
             EditDeleteElementBottomSheetContent(
                 editButtonOnClick = {},
@@ -100,16 +100,16 @@ class BottomSheetContentsTest {
             onNodeWithText("Delete")
                 .assertIsDisplayed()
                 .assertContentDescriptionEquals("Delete element")
-                .assertHasClickAction()
+                .performClick()
             onNodeWithText("Edit")
                 .assertIsDisplayed()
                 .assertContentDescriptionEquals("Edit element")
-                .assertHasClickAction()
+                .performClick()
         }
     }
 
     @Test
-    fun editDeleteElementBottomSheetContentPreview_textIsDisplayed_buttonsAreClickable() {
+    fun editDeleteElementBottomSheetContentPreview_isDisplayed() {
         composeTestRule.setContent {
             EditDeleteElementBottomSheetContentPreview()
         }
@@ -192,7 +192,7 @@ class BottomSheetContentsTest {
     }
 
     @Test
-    fun twoGroupsSortBottomSheetContentPreview_twoGroupsAreDisplayed() {
+    fun twoGroupsSortBottomSheetContentPreview_isDisplayed() {
         composeTestRule.setContent {
             TwoGroupsSortBottomSheetContentPreview()
         }
@@ -245,7 +245,7 @@ class BottomSheetContentsTest {
     }
 
     @Test
-    fun threeGroupsSortBottomSheetContentPreview_threeGroupsAreDisplayed() {
+    fun threeGroupsSortBottomSheetContentPreview_isDisplayed() {
         composeTestRule.setContent {
             ThreeGroupsSortBottomSheetContentPreview()
         }

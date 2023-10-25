@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -16,7 +16,8 @@ fun KeepNoteModalBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable (BoxScope.() -> Unit) = {}
+    content: @Composable (BoxScope.() -> Unit)
+
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,

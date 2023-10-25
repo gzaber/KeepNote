@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.theme.CardContainerColor
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
-import com.gzaber.keepnote.ui.utils.model.Element
+import com.gzaber.keepnote.ui.util.model.Element
 
 
 @Composable
@@ -153,8 +153,8 @@ fun NoteElementGridItemPreview() {
             isGridItem = true,
             element = Element.empty().copy(
                 isNote = true,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
+                name = "Title Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Content Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -169,7 +169,7 @@ fun FolderElementGridItemPreview() {
             isGridItem = true,
             element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean"
+                name = "Name Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }
@@ -183,8 +183,8 @@ fun NoteElementListItemPreview() {
             isGridItem = false,
             element = Element.empty().copy(
                 isNote = true,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
+                name = "Title Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Content Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -198,7 +198,7 @@ fun FolderElementListItemPreview() {
             isGridItem = false,
             element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean"
+                name = "Name Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }

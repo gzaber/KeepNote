@@ -1,4 +1,4 @@
-package com.gzaber.keepnote.ui.utils.components
+package com.gzaber.keepnote.ui.util.composable
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -27,7 +27,7 @@ fun KeepNoteAppBar(
     isGridView: Boolean = false,
     isTitleBold: Boolean = false,
     onBackClick: (() -> Unit)? = null,
-    onFilterClick: (() -> Unit)? = null,
+    onSortClick: (() -> Unit)? = null,
     onChangeViewClick: (() -> Unit)? = null,
     onSaveClick: (() -> Unit)? = null,
     onShareClick: (() -> Unit)? = null
@@ -52,9 +52,9 @@ fun KeepNoteAppBar(
             }
         },
         actions = {
-            if (onFilterClick != null) {
+            if (onSortClick != null) {
                 IconButton(
-                    onClick = onFilterClick
+                    onClick = onSortClick
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_sort),
@@ -71,7 +71,9 @@ fun KeepNoteAppBar(
                         painter = painterResource(
                             id = if (isGridView) R.drawable.ic_list_view else R.drawable.ic_grid_view
                         ),
-                        contentDescription = stringResource(id = R.string.grid_view)
+                        contentDescription = stringResource(
+                            id = if (isGridView) R.string.list_view else R.string.grid_view
+                        )
                     )
                 }
             }
@@ -100,12 +102,26 @@ fun KeepNoteAppBar(
 
 @Preview
 @Composable
-fun ElementsOverviewAppBarPreview() {
+fun ElementsOverviewAppBarListViewPreview() {
     KeepNoteTheme {
         KeepNoteAppBar(
             title = R.string.app_name,
             isTitleBold = true,
-            onFilterClick = {},
+            onSortClick = {},
+            onChangeViewClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ElementsOverviewAppBarGridViewPreview() {
+    KeepNoteTheme {
+        KeepNoteAppBar(
+            title = R.string.app_name,
+            isGridView = true,
+            isTitleBold = true,
+            onSortClick = {},
             onChangeViewClick = {},
         )
     }
@@ -142,7 +158,7 @@ fun FolderDetailsAppBarPreview() {
         KeepNoteAppBar(
             title = R.string.folder_details,
             onBackClick = {},
-            onFilterClick = {},
+            onSortClick = {},
             onChangeViewClick = {},
         )
     }

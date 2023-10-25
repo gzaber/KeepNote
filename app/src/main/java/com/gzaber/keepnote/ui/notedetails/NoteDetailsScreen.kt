@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gzaber.keepnote.R
-import com.gzaber.keepnote.ui.notedetails.components.NoteDetailsContent
-import com.gzaber.keepnote.ui.utils.components.KeepNoteAppBar
-import com.gzaber.keepnote.ui.utils.components.LoadingBox
+import com.gzaber.keepnote.ui.notedetails.composable.NoteDetailsContent
+import com.gzaber.keepnote.ui.util.composable.KeepNoteAppBar
+import com.gzaber.keepnote.ui.util.composable.LoadingBox
 
 @Composable
 fun NoteDetailsScreen(
