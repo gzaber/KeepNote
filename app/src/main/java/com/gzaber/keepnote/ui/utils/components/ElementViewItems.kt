@@ -153,8 +153,8 @@ fun NoteElementGridItemPreview() {
             isGridItem = true,
             element = Element.empty().copy(
                 isNote = true,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
+                name = "Title Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Content Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -169,7 +169,7 @@ fun FolderElementGridItemPreview() {
             isGridItem = true,
             element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean"
+                name = "Name Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }
@@ -183,8 +183,8 @@ fun NoteElementListItemPreview() {
             isGridItem = false,
             element = Element.empty().copy(
                 isNote = true,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean",
-                content = "Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
+                name = "Title Eget mauris pharetra et ultrices neque ornare aenean",
+                content = "Content Non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet"
             )
         )
     }
@@ -198,7 +198,7 @@ fun FolderElementListItemPreview() {
             isGridItem = false,
             element = Element.empty().copy(
                 isNote = false,
-                name = "Eget mauris pharetra et ultrices neque ornare aenean"
+                name = "Name Eget mauris pharetra et ultrices neque ornare aenean"
             )
         )
     }

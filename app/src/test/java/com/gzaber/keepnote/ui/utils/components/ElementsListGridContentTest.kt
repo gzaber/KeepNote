@@ -1,16 +1,10 @@
 package com.gzaber.keepnote.ui.utils.components
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.unit.dp
-import com.gzaber.keepnote.data.repository.model.Note
 import com.gzaber.keepnote.ui.utils.model.Element
-import com.gzaber.keepnote.ui.utils.model.toElement
-import com.gzaber.keepnote.ui.utils.model.toFolder
-import com.gzaber.keepnote.ui.utils.model.toNote
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,8 +12,9 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class ElementsListGridContentTest {
-    val folderElement = Element.empty().copy(name = "folder", isNote = false)
-    val noteElement = Element.empty().copy(name = "note", content = "content", isNote = true)
+    private val folderElement = Element.empty().copy(name = "folder", isNote = false)
+    private val noteElement =
+        Element.empty().copy(name = "note", content = "content", isNote = true)
 
     @get:Rule
     val composeTestRule = createComposeRule()

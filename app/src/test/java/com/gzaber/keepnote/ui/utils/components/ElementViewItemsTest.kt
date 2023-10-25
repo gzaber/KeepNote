@@ -97,9 +97,9 @@ class ElementViewItemsTest {
             NoteElementGridItemPreview()
         }
 
-        composeTestRule.onNodeWithText("Eget", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Title", substring = true).assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNodeWithText("Non", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Content", substring = true).assertIsDisplayed()
             .assertHasClickAction()
     }
 
@@ -109,7 +109,7 @@ class ElementViewItemsTest {
             FolderElementGridItemPreview()
         }
 
-        composeTestRule.onNodeWithText("Eget", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Name", substring = true).assertIsDisplayed()
             .assertHasClickAction()
     }
 
@@ -119,9 +119,9 @@ class ElementViewItemsTest {
             NoteElementListItemPreview()
         }
 
-        composeTestRule.onNodeWithText("Eget", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Title", substring = true).assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNodeWithText("Non", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Content", substring = true).assertIsDisplayed()
             .assertHasClickAction()
     }
 
@@ -131,7 +131,7 @@ class ElementViewItemsTest {
             FolderElementListItemPreview()
         }
 
-        composeTestRule.onNodeWithText("Eget", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Name", substring = true).assertIsDisplayed()
             .assertHasClickAction()
     }
 }

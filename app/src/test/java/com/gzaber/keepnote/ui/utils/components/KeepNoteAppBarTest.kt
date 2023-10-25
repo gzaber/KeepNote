@@ -81,7 +81,7 @@ class KeepNoteAppBarTest {
     }
 
     @Test
-    fun noteDetailsAppBarPrevieww_isDisplayed() {
+    fun noteDetailsAppBarPreview_isDisplayed() {
         composeTestRule.setContent {
             NoteDetailsAppBarPreview()
         }
@@ -94,7 +94,7 @@ class KeepNoteAppBarTest {
     }
 
     @Test
-    fun folderDetailsAppBarPrevieww_isDisplayed() {
+    fun folderDetailsAppBarPreview_isDisplayed() {
         composeTestRule.setContent {
             FolderDetailsAppBarPreview()
         }
