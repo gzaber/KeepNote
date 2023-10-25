@@ -70,7 +70,7 @@ fun ElementsOverviewScreen(
                 title = R.string.app_name,
                 isTitleBold = true,
                 isGridView = uiState.isGridView,
-                onFilterClick = {
+                onSortClick = {
                     bottomSheetStatus = BottomSheetStatus.SortElements
                 },
                 onChangeViewClick = viewModel::toggleView,

@@ -70,7 +70,7 @@ fun FolderDetailsScreen(
                 title = R.string.folder_details,
                 isGridView = uiState.isGridView,
                 onBackClick = onBackClick,
-                onFilterClick = { bottomSheetStatus = BottomSheetStatus.SortNotes },
+                onSortClick = { bottomSheetStatus = BottomSheetStatus.SortNotes },
                 onChangeViewClick = viewModel::toggleView
             )
         },
