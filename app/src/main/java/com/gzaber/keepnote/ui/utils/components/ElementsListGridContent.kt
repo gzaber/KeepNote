@@ -24,8 +24,8 @@ import com.gzaber.keepnote.ui.utils.model.Element
 fun ElementsListGridContent(
     elements: List<Element>,
     isGridView: Boolean,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     onItemClick: (Boolean, Int) -> Unit = { _, _ -> },
     onItemLongClick: (Element) -> Unit = {},
     horizontalSpace: Dp = 8.dp,
@@ -82,25 +82,25 @@ fun ElementsListContentPreview() {
             elements = listOf(
                 Element.empty().copy(
                     isNote = true,
-                    name = "eget mauris pharetra et ultrices neque ornare aenean",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title1 eget mauris pharetra et ultrices neque ornare aenean",
+                    content = "Content1 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = false,
-                    name = "eget mauris pharetra et ultrices neque ornare aenean",
+                    name = "Folder name1 eget mauris pharetra et ultrices neque ornare aenean",
                     content = "",
                     color = Color.Green.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = true,
-                    name = "Note title",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title2",
+                    content = "Content2 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = false,
-                    name = "eget mauris pharetra et ultrices neque ornare aenean",
+                    name = "Folder name2 eget mauris pharetra et ultrices neque ornare aenean",
                     content = "",
                     color = Color.Magenta.toArgb()
                 )
@@ -119,25 +119,25 @@ fun ElementsGridContentPreview() {
             elements = listOf(
                 Element.empty().copy(
                     isNote = true,
-                    name = "Note title",
-                    content = "Lorem ipsum dolor sit amet",
+                    name = "Note title1",
+                    content = "Content1 lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = false,
-                    name = "Folder name",
+                    name = "Folder name1",
                     content = "",
                     color = Color.Green.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = true,
-                    name = "Note title",
-                    content = "Lorem ipsum dolor sit amet",
+                    name = "Note title2",
+                    content = "Content2 lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = false,
-                    name = "Folder name",
+                    name = "Folder name2",
                     content = "",
                     color = Color.Magenta.toArgb()
                 )
@@ -156,14 +156,14 @@ fun FolderDetailsListContentPreview() {
             elements = listOf(
                 Element.empty().copy(
                     isNote = true,
-                    name = "eget mauris pharetra et ultrices neque ornare aenean",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title1 eget mauris pharetra et ultrices neque ornare aenean",
+                    content = "Content1 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = true,
-                    name = "Note title",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title2",
+                    content = "Content2 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 )
             )
@@ -187,14 +187,14 @@ fun FolderDetailsGridContentPreview() {
             elements = listOf(
                 Element.empty().copy(
                     isNote = true,
-                    name = "eget mauris pharetra et ultrices neque ornare aenean",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title1 eget mauris pharetra et ultrices neque ornare aenean",
+                    content = "Content1 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Red.toArgb()
                 ),
                 Element.empty().copy(
                     isNote = true,
-                    name = "Note title",
-                    content = "non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
+                    name = "Note title2",
+                    content = "Content2 non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet",
                     color = Color.Blue.toArgb()
                 )
             )
