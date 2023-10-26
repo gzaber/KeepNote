@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,9 @@ import com.gzaber.keepnote.ui.theme.ColorSelectorColor5
 import com.gzaber.keepnote.ui.theme.ColorSelectorColor6
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
+
+const val COLOR_CIRCLE_TAG = "colorCircleTag"
+const val COLOR_SELECTOR_TAG = "colorSelectorTag"
 
 @Composable
 fun ColorCircle(
@@ -49,11 +53,12 @@ fun ColorCircle(
             .clip(CircleShape)
             .background(color)
             .clickable { onClick(color) }
+            .testTag(COLOR_CIRCLE_TAG)
     ) {
         if (isSelected) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_check),
-                contentDescription = stringResource(id = R.string.select_color),
+                contentDescription = stringResource(id = R.string.selected_color),
                 modifier = Modifier.size(32.dp)
             )
         }
@@ -83,6 +88,7 @@ fun ColorSelector(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp)
+            .testTag(COLOR_SELECTOR_TAG)
     ) {
         for (color in colors) {
             ColorCircle(
