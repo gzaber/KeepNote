@@ -18,7 +18,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
-    <string name="select_color">Select color</string>
+    <string name="selected_color">Selected color</string>
     <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="navigate_back">Navigate back</string>

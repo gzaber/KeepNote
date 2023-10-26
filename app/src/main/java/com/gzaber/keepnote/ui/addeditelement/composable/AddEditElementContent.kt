@@ -11,12 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gzaber.keepnote.R
 import com.gzaber.keepnote.ui.theme.KeepNoteTheme
 
+const val TITLE_TEXT_FIELD_TAG = "titleTextFieldTag"
+const val CONTENT_TEXT_FIELD_TAG = "contentTextFieldTag"
 
 @Composable
 fun AddEditElementContent(
@@ -40,7 +43,9 @@ fun AddEditElementContent(
             onValueChange = onTitleChange,
             singleLine = true,
             label = { Text(stringResource(id = R.string.title)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TITLE_TEXT_FIELD_TAG)
         )
         if (isNote) {
             OutlinedTextField(
@@ -50,6 +55,7 @@ fun AddEditElementContent(
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxWidth()
+                    .testTag(CONTENT_TEXT_FIELD_TAG)
             )
         }
         ColorSelector(
