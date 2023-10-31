@@ -21,8 +21,8 @@ class RoomNotesDataSource @Inject constructor(
         return noteDao.observeById(noteId)
     }
 
-    override suspend fun createNote(note: NoteEntity) {
-        noteDao.create(note)
+    override suspend fun createNote(note: NoteEntity): Long {
+        return noteDao.create(note)
     }
 
     override suspend fun updateNote(note: NoteEntity) {

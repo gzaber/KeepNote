@@ -35,8 +35,8 @@ class DefaultNotesRepository @Inject constructor(
         }
     }
 
-    override suspend fun createNote(note: Note) {
-        notesDataSource.createNote(note.toEntity())
+    override suspend fun createNote(note: Note): Long {
+        return notesDataSource.createNote(note.toEntity())
     }
 
     override suspend fun updateNote(note: Note) {

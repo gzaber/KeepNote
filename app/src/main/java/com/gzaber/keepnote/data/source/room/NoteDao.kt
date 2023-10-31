@@ -21,7 +21,7 @@ interface NoteDao {
     fun observeById(noteId: Int): Flow<NoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun create(note: NoteEntity)
+    suspend fun create(note: NoteEntity): Long
 
     @Update
     suspend fun update(note: NoteEntity)
