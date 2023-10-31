@@ -57,6 +57,7 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
+            mainClock.advanceTimeByFrame()
             onNodeWithText("KeepNote").assertIsDisplayed()
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
@@ -107,16 +108,16 @@ class ElementsOverviewScreenTest {
 
     @Test
     fun elementsOverviewScreen_elementItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
-        foldersRepository.createFolder(Element.empty().copy(name = "folder1").toFolder())
-        foldersRepository.createFolder(Element.empty().copy(name = "folder2").toFolder())
+        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
 
         setContent()
 
         composeTestRule.apply {
-            onNodeWithText("folder1").assertIsDisplayed().performTouchInput { longClick() }
-            onNodeWithText("Delete").assertIsDisplayed().performClick()
-            onNodeWithText("folder2").assertIsDisplayed().performTouchInput { longClick() }
+            mainClock.advanceTimeByFrame()
+            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
             onNodeWithText("Edit").assertIsDisplayed().performClick()
+            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("Delete").assertIsDisplayed().performClick()
         }
     }
 
