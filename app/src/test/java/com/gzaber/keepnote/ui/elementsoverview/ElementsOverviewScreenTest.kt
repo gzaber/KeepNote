@@ -48,7 +48,14 @@ class ElementsOverviewScreenTest {
     }
 
     @Test
-    fun elementsOverviewScreen_appTitleAndFolderAndNoteAreDisplayed() = runTest {
+    fun elementsOverviewScreen_appTitleIsDisplayed() = runTest {
+        setContent()
+
+        composeTestRule.onNodeWithText("KeepNote").assertIsDisplayed()
+    }
+
+    @Test
+    fun elementsOverviewScreen_FolderAndNoteAreDisplayed() = runTest {
         foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
         notesRepository.createNote(
             Element.empty().copy(name = "note", content = "content").toNote()
@@ -57,8 +64,6 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            mainClock.advanceTimeByFrame()
-            onNodeWithText("KeepNote").assertIsDisplayed()
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
             onNodeWithText("content").assertIsDisplayed()
@@ -75,7 +80,7 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            onNodeWithContentDescription("Grid view").performClick()
+            onNodeWithContentDescription("Grid view").assertIsDisplayed().performClick()
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
             onNodeWithText("content").assertIsDisplayed()
@@ -87,7 +92,7 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            onNodeWithContentDescription("Sort").performClick()
+            onNodeWithContentDescription("Sort").assertIsDisplayed().performClick()
             onNodeWithText("Sort by").assertIsDisplayed()
             onNodeWithText("Order").assertIsDisplayed()
             onNodeWithText("First elements").assertIsDisplayed()
@@ -99,9 +104,9 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            onNodeWithContentDescription("Create element").performClick()
+            onNodeWithContentDescription("Create element").assertIsDisplayed().performClick()
             onNodeWithText("Folder").assertIsDisplayed().performClick()
-            onNodeWithContentDescription("Create element").performClick()
+            onNodeWithContentDescription("Create element").assertIsDisplayed().performClick()
             onNodeWithText("Note").assertIsDisplayed().performClick()
         }
     }
@@ -113,7 +118,6 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            mainClock.advanceTimeByFrame()
             onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
             onNodeWithText("Edit").assertIsDisplayed().performClick()
             onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }

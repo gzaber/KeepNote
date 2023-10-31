@@ -9,6 +9,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
+import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.ui.util.model.toFolder
+import com.gzaber.keepnote.ui.util.model.toNote
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
@@ -44,97 +47,101 @@ class AddEditElementScreenTest {
     }
 
     @Test
-    fun addEditElementScreen_createNoteMode_correctTitleIsDisplayed() = runTest {
-        setContent(AddEditElementMode.CREATE_NOTE)
+    fun addEditElementScreen_createNoteMode_correctTitleAndLabelsAreDisplayed() = runTest {
+        setContent(isNoteArg = true)
 
-        composeTestRule.onNodeWithText("Create note").assertIsDisplayed()
+        composeTestRule.apply {
+            onNodeWithText("Create note").assertIsDisplayed()
+            onNodeWithText("Title").assertIsDisplayed()
+            onNodeWithText("Content").assertIsDisplayed()
+        }
     }
 
     @Test
-    fun addEditElementScreen_createChildNoteMode_correctTitleIsDisplayed() = runTest {
-        setContent(AddEditElementMode.CREATE_CHILD_NOTE)
+    fun addEditElementScreen_createChildNoteMode_correctTitleAndLabelsAreDisplayed() = runTest {
+        val folderId =
+            foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
 
-        composeTestRule.onNodeWithText("Create note").assertIsDisplayed()
+        setContent(
+            isNoteArg = true,
+            folderIdArg = "$folderId"
+        )
+
+        composeTestRule.apply {
+            onNodeWithText("Create note").assertIsDisplayed()
+            onNodeWithText("Title").assertIsDisplayed()
+            onNodeWithText("Content").assertIsDisplayed()
+        }
     }
 
     @Test
-    fun addEditElementScreen_createFolderMode_correctTitleIsDisplayed() = runTest {
-        setContent(AddEditElementMode.CREATE_FOLDER)
+    fun addEditElementScreen_createFolderMode_correctTitleAndLabelAreDisplayed() = runTest {
+        setContent(isNoteArg = false)
 
-        composeTestRule.onNodeWithText("Create folder").assertIsDisplayed()
+        composeTestRule.apply {
+            onNodeWithText("Create folder").assertIsDisplayed()
+            onNodeWithText("Title").assertIsDisplayed()
+        }
     }
 
     @Test
-    fun addEditElementScreen_updateNoteMode_correctTitleIsDisplayed() = runTest {
-        setContent(AddEditElementMode.UPDATE_NOTE)
+    fun addEditElementScreen_updateNoteMode_correctTitleAndLabelsAndValuesAreDisplayed() = runTest {
+        val noteId = notesRepository.createNote(
+            Element.empty().copy(name = "note", content = "content").toNote()
+        )
 
-        composeTestRule.onNodeWithText("Update note").assertIsDisplayed()
+        setContent(
+            isNoteArg = true,
+            elementIdArg = "$noteId"
+        )
+
+        composeTestRule.apply {
+            onNodeWithText("Update note").assertIsDisplayed()
+            onNodeWithText("Title").assertIsDisplayed()
+            onNodeWithText("Content").assertIsDisplayed()
+            onNodeWithText("note").assertIsDisplayed()
+            onNodeWithText("content").assertIsDisplayed()
+        }
     }
 
     @Test
-    fun addEditElementScreen_updateFolderMode_correctTitleIsDisplayed() = runTest {
-        setContent(AddEditElementMode.UPDATE_FOLDER)
+    fun addEditElementScreen_updateFolderMode_correctTitleAndLabelAndValueAreDisplayed() = runTest {
+        val folderId =
+            foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
 
-        composeTestRule.onNodeWithText("Update folder").assertIsDisplayed()
-    }
+        setContent(
+            isNoteArg = false,
+            elementIdArg = "$folderId"
+        )
 
-    @Test
-    fun addEditElementScreen_createFolder_labelIsDisplayed() = runTest {
-        setContent(AddEditElementMode.CREATE_FOLDER)
-
-        composeTestRule.onNodeWithText("Title").assertIsDisplayed()
-    }
-
-    @Test
-    fun addEditElementScreen_createNote_labelsAreDisplayed() = runTest {
-        setContent(AddEditElementMode.CREATE_NOTE)
-
-        composeTestRule.onNodeWithText("Title").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Content").assertIsDisplayed()
+        composeTestRule.apply {
+            onNodeWithText("Update folder").assertIsDisplayed()
+            onNodeWithText("Title").assertIsDisplayed()
+            onNodeWithText("folder").assertIsDisplayed()
+        }
     }
 
     @Test
     fun addEditElementScreen_saveButtonCanBeClicked() = runTest {
-        setContent(AddEditElementMode.CREATE_FOLDER)
+        setContent()
 
         composeTestRule.onNodeWithContentDescription("Save").assertIsDisplayed().performClick()
     }
 
     @Test
     fun addEditElementScreen_backButtonCanBeClicked() = runTest {
-        setContent(AddEditElementMode.CREATE_FOLDER)
+        setContent()
 
         composeTestRule.onNodeWithContentDescription("Navigate back").assertIsDisplayed()
             .performClick()
     }
 
-    private fun setContent(mode: AddEditElementMode) {
-        var isNoteArg = true
-        var elementIdArg: String? = null
-        var folderIdArg: String? = null
+    private fun setContent(
+        isNoteArg: Boolean = true,
+        elementIdArg: String? = null,
+        folderIdArg: String? = null,
+    ) {
 
-        when (mode) {
-            AddEditElementMode.CREATE_CHILD_NOTE -> folderIdArg = "1"
-            AddEditElementMode.CREATE_NOTE -> {
-                elementIdArg = null
-                isNoteArg = true
-            }
-
-            AddEditElementMode.CREATE_FOLDER -> {
-                elementIdArg = null
-                isNoteArg = false
-            }
-
-            AddEditElementMode.UPDATE_NOTE -> {
-                elementIdArg = "1"
-                isNoteArg = true
-            }
-
-            AddEditElementMode.UPDATE_FOLDER -> {
-                elementIdArg = "1"
-                isNoteArg = false
-            }
-        }
         composeTestRule.setContent {
             AddEditElementScreen(
                 onBackClick = {},
