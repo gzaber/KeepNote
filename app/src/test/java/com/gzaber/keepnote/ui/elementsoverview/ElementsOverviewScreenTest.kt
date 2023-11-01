@@ -1,6 +1,8 @@
 package com.gzaber.keepnote.ui.elementsoverview
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -9,6 +11,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
+import com.gzaber.keepnote.ui.util.composable.LOADING_BOX_TAG
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toFolder
 import com.gzaber.keepnote.ui.util.model.toNote
@@ -25,6 +28,7 @@ import org.robolectric.annotation.Config
 import javax.inject.Inject
 
 
+@OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(application = HiltTestApplication::class)
@@ -55,7 +59,7 @@ class ElementsOverviewScreenTest {
     }
 
     @Test
-    fun elementsOverviewScreen_FolderAndNoteAreDisplayed() = runTest {
+    fun elementsOverviewScreen_FolderAndNoteAreDisplayedAndCanBeClicked() = runTest {
         foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
         notesRepository.createNote(
             Element.empty().copy(name = "note", content = "content").toNote()
@@ -64,9 +68,25 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            onNodeWithText("folder").assertIsDisplayed()
-            onNodeWithText("note").assertIsDisplayed()
-            onNodeWithText("content").assertIsDisplayed()
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            onNodeWithText("folder").assertIsDisplayed().performClick()
+            onNodeWithText("note").assertIsDisplayed().performClick()
+            onNodeWithText("content").assertIsDisplayed().performClick()
+        }
+    }
+
+    @Test
+    fun elementsOverviewScreen_elementItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
+        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
+
+        setContent()
+
+        composeTestRule.apply {
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("Edit").assertIsDisplayed().performClick()
+            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("Delete").assertIsDisplayed().performClick()
         }
     }
 
@@ -81,6 +101,7 @@ class ElementsOverviewScreenTest {
 
         composeTestRule.apply {
             onNodeWithContentDescription("Grid view").assertIsDisplayed().performClick()
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
             onNodeWithText("content").assertIsDisplayed()
@@ -108,20 +129,6 @@ class ElementsOverviewScreenTest {
             onNodeWithText("Folder").assertIsDisplayed().performClick()
             onNodeWithContentDescription("Create element").assertIsDisplayed().performClick()
             onNodeWithText("Note").assertIsDisplayed().performClick()
-        }
-    }
-
-    @Test
-    fun elementsOverviewScreen_elementItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
-        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
-
-        setContent()
-
-        composeTestRule.apply {
-            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
-            onNodeWithText("Edit").assertIsDisplayed().performClick()
-            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
-            onNodeWithText("Delete").assertIsDisplayed().performClick()
         }
     }
 

@@ -1,6 +1,8 @@
 package com.gzaber.keepnote.ui.folderdetails
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -11,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
+import com.gzaber.keepnote.ui.util.composable.LOADING_BOX_TAG
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toFolder
 import com.gzaber.keepnote.ui.util.model.toNote
@@ -26,10 +29,12 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import javax.inject.Inject
 
+@OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(application = HiltTestApplication::class)
 class FolderDetailsScreenTest {
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -49,33 +54,53 @@ class FolderDetailsScreenTest {
 
     @Test
     fun folderDetailsScreen_titleIsDisplayed() = runTest {
-        setContent()
+        val folderId = insertNotes()
+
+        setContent(folderIdArg = "$folderId")
 
         composeTestRule.onNodeWithText("Folder details").assertIsDisplayed()
     }
 
     @Test
-    fun folderDetailsScreen_notesAreDisplayed() = runTest {
-        val folderId = insertElements()
+    fun folderDetailsScreen_notesAreDisplayedAndCanBeClicked() = runTest {
+        val folderId = insertNotes()
+
         setContent(folderIdArg = "$folderId")
 
         composeTestRule.apply {
-            waitForIdle()
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
             onNodeWithText("folder").assertIsDisplayed()
-            onNodeWithText("note1").assertIsDisplayed()
-            onNodeWithText("content1").assertIsDisplayed()
-            onNodeWithText("note2").assertIsDisplayed()
-            onNodeWithText("content2").assertIsDisplayed()
+            onNodeWithText("note1").assertIsDisplayed().performClick()
+            onNodeWithText("content1").assertIsDisplayed().performClick()
+            onNodeWithText("note2").assertIsDisplayed().performClick()
+            onNodeWithText("content2").assertIsDisplayed().performClick()
+        }
+    }
+
+    @Test
+    fun folderDetailsScreen_noteItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
+        val folderId = insertNotes()
+
+        setContent(folderIdArg = "$folderId")
+
+        composeTestRule.apply {
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            onNodeWithText("note1").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("Edit").assertIsDisplayed().performClick()
+            onNodeWithText("note2").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("Delete").assertIsDisplayed().performClick()
         }
     }
 
     @Test
     fun folderDetailsScreen_viewIsChanged_notesAreDisplayed() = runTest {
-        val folderId = insertElements()
+        val folderId = insertNotes()
+
         setContent(folderIdArg = "$folderId")
 
         composeTestRule.apply {
             onNodeWithContentDescription("Grid view").assertIsDisplayed().performClick()
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note1").assertIsDisplayed()
             onNodeWithText("content1").assertIsDisplayed()
@@ -86,7 +111,8 @@ class FolderDetailsScreenTest {
 
     @Test
     fun folderDetailsScreen_sortButtonIsClicked_modalBottomSheetIsDisplayed() = runTest {
-        val folderId = insertElements()
+        val folderId = insertNotes()
+
         setContent(folderIdArg = "$folderId")
 
         composeTestRule.apply {
@@ -98,29 +124,32 @@ class FolderDetailsScreenTest {
 
     @Test
     fun folderDetailsScreen_fabCanBeClicked() = runTest {
-        val folderId = insertElements()
+        val folderId = insertNotes()
+
         setContent(folderIdArg = "$folderId")
 
-        composeTestRule.apply {
-            onNodeWithContentDescription("Create note").assertIsDisplayed().performClick()
-        }
+        composeTestRule.onNodeWithContentDescription("Create note").assertIsDisplayed()
+            .performClick()
     }
 
     @Test
-    fun folderDetailsScreen_noteItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
-        val folderId = insertElements()
+    fun folderDetailsScreen_backButtonCanBeClicked() = runTest {
+        val folderId = insertNotes()
+
         setContent(folderIdArg = "$folderId")
 
-        composeTestRule.apply {
-            waitForIdle()
-            onNodeWithText("note1").assertIsDisplayed().performTouchInput { longClick() }
-            onNodeWithText("Edit").assertIsDisplayed().performClick()
-            onNodeWithText("note2").assertIsDisplayed().performTouchInput { longClick() }
-            onNodeWithText("Delete").assertIsDisplayed().performClick()
-        }
+        composeTestRule.onNodeWithContentDescription("Navigate back").assertIsDisplayed()
+            .performClick()
     }
 
-    private suspend fun insertElements(): Long {
+    @Test
+    fun folderDetailsScreen_errorMessageIsDisplayed() = runTest {
+        setContent(folderIdArg = null)
+
+        composeTestRule.onNodeWithText("Something went wrong").assertIsDisplayed()
+    }
+
+    private suspend fun insertNotes(): Long {
         val folderId =
             foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
         notesRepository.createNote(
@@ -135,7 +164,7 @@ class FolderDetailsScreenTest {
         return folderId
     }
 
-    private fun setContent(folderIdArg: String? = null) {
+    private fun setContent(folderIdArg: String?) {
         composeTestRule.setContent {
             FolderDetailsScreen(
                 onNoteClick = {},

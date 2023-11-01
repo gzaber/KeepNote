@@ -1,6 +1,8 @@
 package com.gzaber.keepnote.ui.notedetails
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -8,6 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
+import com.gzaber.keepnote.ui.util.composable.LOADING_BOX_TAG
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toNote
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -22,6 +25,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import javax.inject.Inject
 
+@OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
 @Config(application = HiltTestApplication::class)
@@ -57,6 +61,7 @@ class NoteDetailsScreenTest {
         setContent(noteIdArg = "$noteId")
 
         composeTestRule.apply {
+            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
             onNodeWithText("note").assertIsDisplayed()
             onNodeWithText("content").assertIsDisplayed()
         }
