@@ -18,7 +18,7 @@ interface FolderDao {
     fun observeById(folderId: Int): Flow<FolderEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun create(folder: FolderEntity)
+    suspend fun create(folder: FolderEntity): Long
 
     @Update
     suspend fun update(folder: FolderEntity)

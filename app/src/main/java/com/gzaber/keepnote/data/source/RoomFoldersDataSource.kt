@@ -17,8 +17,8 @@ class RoomFoldersDataSource @Inject constructor(
         return folderDao.observeById(folderId)
     }
 
-    override suspend fun createFolder(folder: FolderEntity) {
-        folderDao.create(folder)
+    override suspend fun createFolder(folder: FolderEntity): Long {
+        return folderDao.create(folder)
     }
 
     override suspend fun updateFolder(folder: FolderEntity) {

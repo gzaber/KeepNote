@@ -27,8 +27,8 @@ class DefaultFoldersRepository @Inject constructor(
         }
     }
 
-    override suspend fun createFolder(folder: Folder) {
-        foldersDataSource.createFolder(folder.toEntity())
+    override suspend fun createFolder(folder: Folder): Long {
+        return foldersDataSource.createFolder(folder.toEntity())
     }
 
     override suspend fun updateFolder(folder: Folder) {
