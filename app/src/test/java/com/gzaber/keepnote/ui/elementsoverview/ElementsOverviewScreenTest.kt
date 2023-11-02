@@ -60,10 +60,7 @@ class ElementsOverviewScreenTest {
 
     @Test
     fun elementsOverviewScreen_FolderAndNoteAreDisplayedAndCanBeClicked() = runTest {
-        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
-        notesRepository.createNote(
-            Element.empty().copy(name = "note", content = "content").toNote()
-        )
+        insertElements()
 
         setContent()
 
@@ -77,7 +74,7 @@ class ElementsOverviewScreenTest {
 
     @Test
     fun elementsOverviewScreen_elementItemIsLongClicked_modalBottomSheetIsDisplayed() = runTest {
-        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
+        insertElements()
 
         setContent()
 
@@ -85,17 +82,14 @@ class ElementsOverviewScreenTest {
             waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
             onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
             onNodeWithText("Edit").assertIsDisplayed().performClick()
-            onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
+            onNodeWithText("note").assertIsDisplayed().performTouchInput { longClick() }
             onNodeWithText("Delete").assertIsDisplayed().performClick()
         }
     }
 
     @Test
     fun elementsOverviewScreen_viewIsChanged_folderAndNoteAreDisplayed() = runTest {
-        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
-        notesRepository.createNote(
-            Element.empty().copy(name = "note", content = "content").toNote()
-        )
+        insertElements()
 
         setContent()
 
@@ -130,6 +124,13 @@ class ElementsOverviewScreenTest {
             onNodeWithContentDescription("Create element").assertIsDisplayed().performClick()
             onNodeWithText("Note").assertIsDisplayed().performClick()
         }
+    }
+
+    private suspend fun insertElements() {
+        foldersRepository.createFolder(Element.empty().copy(name = "folder").toFolder())
+        notesRepository.createNote(
+            Element.empty().copy(name = "note", content = "content").toNote()
+        )
     }
 
     private fun setContent() {
