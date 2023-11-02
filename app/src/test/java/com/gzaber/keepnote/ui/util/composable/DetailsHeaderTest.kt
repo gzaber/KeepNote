@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.util.composable
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import org.junit.Rule
@@ -21,7 +22,8 @@ class DetailsHeaderTest {
             DetailsHeader(
                 title = "header",
                 subtitle = "2023",
-                color = Color.Red
+                color = Color.Red,
+                modifier = Modifier
             )
         }
 

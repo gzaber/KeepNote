@@ -1,6 +1,7 @@
 package com.gzaber.keepnote.ui.notedetails.composable
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -23,7 +24,8 @@ class NoteDetailsContentTest {
         composeTestRule.setContent {
             NoteDetailsContent(
                 note = Element.empty().copy(name = "note", content = "content").toNote(),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
             )
         }
 

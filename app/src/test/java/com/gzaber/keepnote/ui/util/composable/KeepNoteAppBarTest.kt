@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.util.composable
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -27,7 +28,8 @@ class KeepNoteAppBarTest {
                 onSortClick = {},
                 onChangeViewClick = {},
                 onSaveClick = {},
-                onShareClick = {}
+                onShareClick = {},
+                modifier = Modifier
             )
         }
 

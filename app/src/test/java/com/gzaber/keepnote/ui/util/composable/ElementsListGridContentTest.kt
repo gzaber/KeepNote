@@ -1,6 +1,7 @@
 package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -24,7 +25,8 @@ class ElementsListGridContentTest {
         composeTestRule.setContent {
             ElementsListGridContent(
                 elements = listOf(folderElement, noteElement),
-                isGridView = true
+                isGridView = true,
+                modifier = Modifier
             ) {
                 Text("header")
             }
@@ -43,7 +45,8 @@ class ElementsListGridContentTest {
         composeTestRule.setContent {
             ElementsListGridContent(
                 elements = listOf(folderElement, noteElement),
-                isGridView = false
+                isGridView = false,
+                modifier = Modifier
             ) {
                 Text("header")
             }

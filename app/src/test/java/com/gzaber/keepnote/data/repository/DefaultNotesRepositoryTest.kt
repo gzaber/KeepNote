@@ -59,7 +59,7 @@ class DefaultNotesRepositoryTest {
 
         val result = repository.getFirstLevelNotesFlow().first()
 
-        assertEquals(result, listOf(note1, note2))
+        assertEquals(listOf(note1, note2), result)
         verify(mockNotesDataSource).getFirstLevelNotesFlow()
     }
 
@@ -69,7 +69,7 @@ class DefaultNotesRepositoryTest {
 
         val result = repository.getFirstLevelNotesFlow().first()
 
-        assertEquals(result, emptyList<Note>())
+        assertEquals(emptyList<Note>(), result)
         verify(mockNotesDataSource).getFirstLevelNotesFlow()
     }
 
@@ -86,7 +86,7 @@ class DefaultNotesRepositoryTest {
 
         val result = repository.getSecondLevelNotesFlow(11).first()
 
-        assertEquals(result, listOf(note1.copy(folderId = 11), note2.copy(folderId = 11)))
+        assertEquals(listOf(note1.copy(folderId = 11), note2.copy(folderId = 11)), result)
         verify(mockNotesDataSource).getSecondLevelNotesFlow(11)
     }
 
@@ -97,7 +97,7 @@ class DefaultNotesRepositoryTest {
 
         val result = repository.getSecondLevelNotesFlow(11).first()
 
-        assertEquals(result, emptyList<Note>())
+        assertEquals(emptyList<Note>(), result)
         verify(mockNotesDataSource).getSecondLevelNotesFlow(11)
     }
 
@@ -109,7 +109,7 @@ class DefaultNotesRepositoryTest {
 
         val result = repository.getNoteByIdFlow(1).first()
 
-        assertEquals(result, note1)
+        assertEquals(note1, result)
         verify(mockNotesDataSource).getNoteByIdFlow(1)
     }
 

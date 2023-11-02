@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.util.composable
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -22,7 +23,8 @@ class KeepNoteFloatingActionButtonTest {
         composeTestRule.setContent {
             KeepNoteFloatingActionButton(
                 contentDescription = R.string.create_element,
-                onClick = { }
+                onClick = { },
+                modifier = Modifier
             )
         }
 

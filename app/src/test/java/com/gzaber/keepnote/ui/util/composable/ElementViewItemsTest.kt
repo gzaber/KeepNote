@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.util.composable
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -23,7 +24,7 @@ class ElementViewItemsTest {
     @Test
     fun elementIcon_folderNodeIsDisplayed() {
         composeTestRule.setContent {
-            ElementIcon(isNote = false)
+            ElementIcon(isNote = false, modifier = Modifier)
         }
 
         composeTestRule.onNodeWithContentDescription("Folder").assertIsDisplayed()
@@ -32,7 +33,7 @@ class ElementViewItemsTest {
     @Test
     fun elementIcon_noteNodeIsDisplayed() {
         composeTestRule.setContent {
-            ElementIcon(isNote = true)
+            ElementIcon(isNote = true, modifier = Modifier)
         }
 
         composeTestRule.onNodeWithContentDescription("Note").assertIsDisplayed()
@@ -41,7 +42,10 @@ class ElementViewItemsTest {
     @Test
     fun elementText_isFolder_nameIsDisplayed() {
         composeTestRule.setContent {
-            ElementText(element = Element.empty().copy(isNote = false, name = "name"))
+            ElementText(
+                element = Element.empty().copy(isNote = false, name = "name"),
+                modifier = Modifier
+            )
         }
 
         composeTestRule.onNodeWithText("name").assertIsDisplayed()
@@ -51,7 +55,8 @@ class ElementViewItemsTest {
     fun elementText_isNote_nameAndContentAreDisplayed() {
         composeTestRule.setContent {
             ElementText(
-                element = Element.empty().copy(isNote = true, name = "name", content = "content")
+                element = Element.empty().copy(isNote = true, name = "name", content = "content"),
+                modifier = Modifier
             )
         }
 
@@ -65,7 +70,8 @@ class ElementViewItemsTest {
             ElementItem(
                 element = Element.empty()
                     .copy(id = 1, isNote = true, name = "name", content = "content"),
-                isGridItem = true
+                isGridItem = true,
+                modifier = Modifier
             )
         }
 
@@ -81,7 +87,8 @@ class ElementViewItemsTest {
             ElementItem(
                 element = Element.empty()
                     .copy(id = 1, isNote = true, name = "name", content = "content"),
-                isGridItem = false
+                isGridItem = false,
+                modifier = Modifier
             )
         }
 

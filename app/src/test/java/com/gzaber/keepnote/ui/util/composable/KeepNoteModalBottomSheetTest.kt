@@ -4,6 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -28,6 +29,7 @@ class KeepNoteModalBottomSheetTest {
                     initialValue = SheetValue.Expanded
                 ),
                 onDismissRequest = {},
+                modifier = Modifier
             ) {
                 Text(text = "sheet content")
             }

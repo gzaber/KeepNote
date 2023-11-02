@@ -52,7 +52,7 @@ class RoomNotesDataSourceTest {
 
         val result = dataSource.getFirstLevelNotesFlow().first()
 
-        assertEquals(result, listOf(note1, note2))
+        assertEquals(listOf(note1, note2), result)
         verify(mockNoteDao).observeFirstLevel()
     }
 
@@ -62,7 +62,7 @@ class RoomNotesDataSourceTest {
 
         val result = dataSource.getFirstLevelNotesFlow().first()
 
-        assertEquals(result, emptyList<NoteEntity>())
+        assertEquals(emptyList<NoteEntity>(), result)
         verify(mockNoteDao).observeFirstLevel()
     }
 
@@ -80,10 +80,10 @@ class RoomNotesDataSourceTest {
         val result = dataSource.getSecondLevelNotesFlow(11).first()
 
         assertEquals(
-            result, listOf(
+            listOf(
                 note1.copy(folderId = 11),
                 note2.copy(folderId = 11)
-            )
+            ), result
         )
         verify(mockNoteDao).observeSecondLevel(11)
     }
@@ -94,7 +94,7 @@ class RoomNotesDataSourceTest {
 
         val result = dataSource.getSecondLevelNotesFlow(11).first()
 
-        assertEquals(result, emptyList<NoteEntity>())
+        assertEquals(emptyList<NoteEntity>(), result)
         verify(mockNoteDao).observeSecondLevel(11)
     }
 
@@ -104,7 +104,7 @@ class RoomNotesDataSourceTest {
 
         val result = dataSource.getNoteByIdFlow(1).first()
 
-        assertEquals(result, note1)
+        assertEquals(note1, result)
         verify(mockNoteDao).observeById(1)
     }
 
