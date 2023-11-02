@@ -1,6 +1,7 @@
 package com.gzaber.keepnote.ui.util.composable
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -32,7 +33,8 @@ class BottomSheetContentsTest {
                 secondButtonOnClick = {},
                 secondButtonIconRes = R.drawable.ic_note,
                 secondButtonContentDescriptionRes = R.string.create_note,
-                secondButtonTextRes = R.string.note
+                secondButtonTextRes = R.string.note,
+                modifier = Modifier
             )
         }
 
@@ -53,7 +55,8 @@ class BottomSheetContentsTest {
         composeTestRule.setContent {
             CreateElementBottomSheetContent(
                 folderButtonOnClick = {},
-                noteButtonOnClick = {}
+                noteButtonOnClick = {},
+                modifier = Modifier
             )
         }
 
@@ -92,7 +95,8 @@ class BottomSheetContentsTest {
         composeTestRule.setContent {
             EditDeleteElementBottomSheetContent(
                 editButtonOnClick = {},
-                deleteButtonOnClick = {}
+                deleteButtonOnClick = {},
+                modifier = Modifier
             )
         }
 
@@ -133,7 +137,8 @@ class BottomSheetContentsTest {
             RadioRow(
                 selected = isSelected.value,
                 onClick = { isSelected.value = !isSelected.value },
-                text = "option"
+                text = "option",
+                modifier = Modifier
             )
         }
 
@@ -151,7 +156,8 @@ class BottomSheetContentsTest {
                 titleRes = R.string.sort_by,
                 radioOptions = listOf(R.string.radio_date, R.string.radio_name),
                 selectedOption = selectedOption.value,
-                onOptionSelected = { selectedOption.value = it }
+                onOptionSelected = { selectedOption.value = it },
+                modifier = Modifier
             )
         }
 
@@ -177,7 +183,8 @@ class BottomSheetContentsTest {
                 onSortOptionSelected = {},
                 orderRadioOptions = orderRadioOptions,
                 orderSelectedOption = orderRadioOptions.first(),
-                onOrderOptionSelected = {}
+                onOrderOptionSelected = {},
+                modifier = Modifier
             )
         }
 
@@ -226,7 +233,8 @@ class BottomSheetContentsTest {
                 onOrderOptionSelected = {},
                 firstElementsRadioOptions = firstElementsRadioOptions,
                 firstElementsSelectedOption = firstElementsRadioOptions.first(),
-                onFirstElementsOptionSelected = {}
+                onFirstElementsOptionSelected = {},
+                modifier = Modifier
             )
         }
 

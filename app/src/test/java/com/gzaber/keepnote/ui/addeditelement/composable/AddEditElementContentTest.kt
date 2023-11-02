@@ -2,6 +2,7 @@ package com.gzaber.keepnote.ui.addeditelement.composable
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
@@ -35,7 +36,8 @@ class AddEditElementContentTest {
                 content = "",
                 onTitleChange = { title.value = it },
                 onContentChange = {},
-                onColorSelect = {}
+                onColorSelect = {},
+                modifier = Modifier
             )
         }
 
@@ -60,7 +62,8 @@ class AddEditElementContentTest {
                 content = content.value,
                 onTitleChange = { title.value = it },
                 onContentChange = { content.value = it },
-                onColorSelect = {}
+                onColorSelect = {},
+                modifier = Modifier
             )
         }
 

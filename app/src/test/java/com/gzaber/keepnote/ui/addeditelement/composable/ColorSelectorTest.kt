@@ -1,5 +1,6 @@
 package com.gzaber.keepnote.ui.addeditelement.composable
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertAll
 import androidx.compose.ui.test.assertCountEquals
@@ -26,7 +27,11 @@ class ColorSelectorTest {
     @Test
     fun colorCircle_isSelected() {
         composeTestRule.setContent {
-            ColorCircle(isSelected = true, color = Color.Red, onClick = {})
+            ColorCircle(
+                isSelected = true,
+                color = Color.Red,
+                onClick = {}, modifier = Modifier
+            )
         }
 
         composeTestRule.onNodeWithTag(COLOR_CIRCLE_TAG).assertIsDisplayed().assertHasClickAction()
@@ -36,7 +41,12 @@ class ColorSelectorTest {
     @Test
     fun colorCircle_isNotSelected() {
         composeTestRule.setContent {
-            ColorCircle(isSelected = false, color = Color.Red, onClick = {})
+            ColorCircle(
+                isSelected = false,
+                color = Color.Red,
+                onClick = {},
+                modifier = Modifier
+            )
         }
 
         composeTestRule.onNodeWithTag(COLOR_CIRCLE_TAG).assertIsDisplayed().assertHasClickAction()
@@ -46,7 +56,7 @@ class ColorSelectorTest {
     @Test
     fun colorSelector_hasColorCircles_colorIsSelected() {
         composeTestRule.setContent {
-            ColorSelector(onColorSelect = {})
+            ColorSelector(onColorSelect = {}, modifier = Modifier)
         }
 
         composeTestRule.onAllNodesWithTag(COLOR_CIRCLE_TAG).assertCountEquals(6).assertAll(
