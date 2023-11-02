@@ -2,7 +2,7 @@ package com.gzaber.keepnote.ui.addeditelement
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -11,7 +11,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.ui.navigation.KeepNoteDestinationArgs
-import com.gzaber.keepnote.ui.util.composable.LOADING_BOX_TAG
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toFolder
 import com.gzaber.keepnote.ui.util.model.toNote
@@ -101,7 +100,7 @@ class AddEditElementScreenTest {
 
         composeTestRule.apply {
             onNodeWithText("Update note").assertIsDisplayed()
-            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            waitUntilExactlyOneExists(hasText("Title"))
             onNodeWithText("Title").assertIsDisplayed()
             onNodeWithText("Content").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
@@ -121,7 +120,7 @@ class AddEditElementScreenTest {
 
         composeTestRule.apply {
             onNodeWithText("Update folder").assertIsDisplayed()
-            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            waitUntilExactlyOneExists(hasText("Title"))
             onNodeWithText("Title").assertIsDisplayed()
             onNodeWithText("folder").assertIsDisplayed()
         }

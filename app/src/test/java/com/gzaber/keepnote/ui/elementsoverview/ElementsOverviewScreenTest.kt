@@ -2,7 +2,7 @@ package com.gzaber.keepnote.ui.elementsoverview
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -11,7 +11,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import com.gzaber.keepnote.data.repository.FoldersRepository
 import com.gzaber.keepnote.data.repository.NotesRepository
-import com.gzaber.keepnote.ui.util.composable.LOADING_BOX_TAG
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toFolder
 import com.gzaber.keepnote.ui.util.model.toNote
@@ -59,13 +58,13 @@ class ElementsOverviewScreenTest {
     }
 
     @Test
-    fun elementsOverviewScreen_FolderAndNoteAreDisplayedAndCanBeClicked() = runTest {
+    fun elementsOverviewScreen_folderAndNoteAreDisplayedAndCanBeClicked() = runTest {
         insertElements()
 
         setContent()
 
         composeTestRule.apply {
-            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            waitUntilExactlyOneExists(hasText("folder"))
             onNodeWithText("folder").assertIsDisplayed().performClick()
             onNodeWithText("note").assertIsDisplayed().performClick()
             onNodeWithText("content").assertIsDisplayed().performClick()
@@ -79,7 +78,7 @@ class ElementsOverviewScreenTest {
         setContent()
 
         composeTestRule.apply {
-            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            waitUntilExactlyOneExists(hasText("folder"))
             onNodeWithText("folder").assertIsDisplayed().performTouchInput { longClick() }
             onNodeWithText("Edit").assertIsDisplayed().performClick()
             onNodeWithText("note").assertIsDisplayed().performTouchInput { longClick() }
@@ -95,7 +94,7 @@ class ElementsOverviewScreenTest {
 
         composeTestRule.apply {
             onNodeWithContentDescription("Grid view").assertIsDisplayed().performClick()
-            waitUntilDoesNotExist(hasTestTag(LOADING_BOX_TAG))
+            waitUntilExactlyOneExists(hasText("folder"))
             onNodeWithText("folder").assertIsDisplayed()
             onNodeWithText("note").assertIsDisplayed()
             onNodeWithText("content").assertIsDisplayed()
