@@ -45,7 +45,7 @@ class DefaultFoldersRepositoryTest {
 
         val result = repository.getAllFoldersFlow().first()
 
-        assertEquals(result, listOf(folder1, folder2))
+        assertEquals(listOf(folder1, folder2), result)
         verify(mockFoldersDataSource).getAllFoldersFlow()
     }
 
@@ -55,7 +55,7 @@ class DefaultFoldersRepositoryTest {
 
         val result = repository.getAllFoldersFlow().first()
 
-        assertEquals(result, emptyList<Folder>())
+        assertEquals(emptyList<Folder>(), result)
         verify(mockFoldersDataSource).getAllFoldersFlow()
     }
 
@@ -67,7 +67,7 @@ class DefaultFoldersRepositoryTest {
 
         val result = repository.getFolderByIdFlow(1).first()
 
-        assertEquals(result, folder1)
+        assertEquals(folder1, result)
         verify(mockFoldersDataSource).getFolderByIdFlow(1)
     }
 

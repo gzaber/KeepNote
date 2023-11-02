@@ -38,7 +38,7 @@ class RoomFoldersDataSourceTest {
 
         val result = dataSource.getAllFoldersFlow().first()
 
-        assertEquals(result, listOf(folder1, folder2))
+        assertEquals(listOf(folder1, folder2), result)
         verify(mockFolderDao).observeAll()
     }
 
@@ -48,7 +48,7 @@ class RoomFoldersDataSourceTest {
 
         val result = dataSource.getAllFoldersFlow().first()
 
-        assertEquals(result, emptyList<FolderEntity>())
+        assertEquals(emptyList<FolderEntity>(), result)
         verify(mockFolderDao).observeAll()
     }
 
@@ -58,7 +58,7 @@ class RoomFoldersDataSourceTest {
 
         val result = dataSource.getFolderByIdFlow(1).first()
 
-        assertEquals(result, folder1)
+        assertEquals(folder1, result)
         verify(mockFolderDao).observeById(1)
     }
 
