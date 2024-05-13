@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
     jacoco
 }
 
@@ -33,17 +33,17 @@ val jacocoTestReport = tasks.register<JacocoReport>("jacocoTestReport") {
 
     classDirectories.setFrom(
         files(
-            fileTree("$buildDir/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com") {
+            fileTree("${layout.buildDirectory}/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com") {
                 exclude(excludes)
             },
-            fileTree("$buildDir/tmp/kotlin-classes/${this.name}") {
+            fileTree("${layout.buildDirectory}/tmp/kotlin-classes/${this.name}") {
                 exclude(excludes)
             }
         )
     )
 
     sourceDirectories.setFrom("$projectDir/src/main/java")
-    executionData.setFrom(file("$buildDir/jacoco/testDebugUnitTest.exec"))
+    executionData.setFrom(file("${layout.buildDirectory}/jacoco/testDebugUnitTest.exec"))
 }
 
 tasks.withType<Test> {
@@ -62,7 +62,7 @@ android {
     defaultConfig {
         applicationId = "com.gzaber.keepnote"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -92,7 +92,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -105,50 +105,32 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.1.1")
-    implementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
+    val hiltVersion = "2.50"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    ksp("com.google.dagger:hilt-compiler:$hiltVersion")
+
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("app.cash.turbine:turbine:1.0.0")
-    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("org.robolectric:robolectric:4.12")
     testImplementation("androidx.compose.ui:ui-test-junit4")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    // Hilt
-    val hiltVersion = "2.44"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    testImplementation("com.google.dagger:hilt-android-testing:2.44")
-    kaptTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-
-    // Room
-    val roomVersion = "2.5.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-}
-
-kapt {
-    correctErrorTypes = true
+    testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
 }

@@ -35,10 +35,10 @@ import kotlinx.coroutines.launch
 
 
 sealed class BottomSheetStatus {
-    object Hidden : BottomSheetStatus()
-    object CreateElement : BottomSheetStatus()
+    data object Hidden : BottomSheetStatus()
+    data object CreateElement : BottomSheetStatus()
     data class EditDeleteElement(val element: Element) : BottomSheetStatus()
-    object SortElements : BottomSheetStatus()
+    data object SortElements : BottomSheetStatus()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
