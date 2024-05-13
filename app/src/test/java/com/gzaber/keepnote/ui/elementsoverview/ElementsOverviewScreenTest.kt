@@ -14,6 +14,7 @@ import com.gzaber.keepnote.data.repository.NotesRepository
 import com.gzaber.keepnote.ui.util.model.Element
 import com.gzaber.keepnote.ui.util.model.toFolder
 import com.gzaber.keepnote.ui.util.model.toNote
+import com.gzaber.keepnote.util.RobolectricTestActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
@@ -37,6 +38,9 @@ class ElementsOverviewScreenTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
+    val robolectricTestActivityRule = RobolectricTestActivity()
+
+    @get:Rule(order = 2)
     val composeTestRule = createComposeRule()
 
     @Inject

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import com.gzaber.keepnote.ui.util.model.Element
+import com.gzaber.keepnote.util.RobolectricTestActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +19,10 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class ElementViewItemsTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val robolectricTestActivityRule = RobolectricTestActivity()
+
+    @get:Rule(order = 1)
     val composeTestRule = createComposeRule()
 
     @Test
