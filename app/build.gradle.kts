@@ -33,17 +33,17 @@ val jacocoTestReport = tasks.register<JacocoReport>("jacocoTestReport") {
 
     classDirectories.setFrom(
         files(
-            fileTree("$buildDir/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com") {
+            fileTree("${layout.buildDirectory}/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com") {
                 exclude(excludes)
             },
-            fileTree("$buildDir/tmp/kotlin-classes/${this.name}") {
+            fileTree("${layout.buildDirectory}/tmp/kotlin-classes/${this.name}") {
                 exclude(excludes)
             }
         )
     )
 
     sourceDirectories.setFrom("$projectDir/src/main/java")
-    executionData.setFrom(file("$buildDir/jacoco/testDebugUnitTest.exec"))
+    executionData.setFrom(file("${layout.buildDirectory}/jacoco/testDebugUnitTest.exec"))
 }
 
 tasks.withType<Test> {
