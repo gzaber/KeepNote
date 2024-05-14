@@ -1,4 +1,4 @@
-<a href="https://github.com/gzaber/KeepNote/actions"><img src="https://img.shields.io/github/actions/workflow/status/gzaber/KeepNote/android.yml" alt="build"></a>
+<a href="https://github.com/gzaber/KeepNote/actions"><img src="https://img.shields.io/github/actions/workflow/status/gzaber/KeepNote/ci.yml" alt="build"></a>
 <a href="https://codecov.io/gh/gzaber/KeepNote"><img src="https://codecov.io/gh/gzaber/KeepNote/branch/master/graph/badge.svg" alt="codecov"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/gzaber/KeepNote" alt="license MIT"></a>
 
@@ -16,7 +16,7 @@ Android app for storing notes. They can be organized into folders.
 ## Architecture
 
 &nbsp;
-[<img alt="architecture" width="700px" src=".images/architecture.png" />](.images/architecture.png)
+[<img alt="architecture" width="740px" src=".images/architecture.png" />](.images/architecture.png)
 
 ## Features
 
