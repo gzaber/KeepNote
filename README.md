@@ -4,20 +4,24 @@
 
 # KeepNote
 
-A simple Android app for storing notes. They can be organized into folders.
+Android app for storing notes. They can be organized into folders.
 
 &nbsp;
-[<img alt="video 1" width="250px" src=".recordings/rec1.gif" />](.recordings/rec1.gif)
+[<img alt="video 1" width="250px" src=".images/rec1.gif" />](.images/rec1.gif)
 &nbsp;
-[<img alt="video 2" width="250px" src=".recordings/rec2.gif" />](.recordings/rec2.gif)
+[<img alt="video 2" width="250px" src=".images/rec2.gif" />](.images/rec2.gif)
 &nbsp;
-[<img alt="video 3" width="250px" src=".recordings/rec3.gif" />](.recordings/rec3.gif)
+[<img alt="video 3" width="250px" src=".images/rec3.gif" />](.images/rec3.gif)
+
+## Architecture
+
+&nbsp;
+[<img alt="architecture" width="700px" src=".images/architecture.png" />](.images/architecture.png)
 
 ## Features
 
-- create, update, delete note and folder
-- preview of note and folder
-- organize notes into folder
+- create, update, delete note/folder
+- organize notes into folders
 - sort notes and folders
 - share note
 - list/grid view
